@@ -37,15 +37,33 @@ namespace Stitch2
 
             foreach (string file_str in files)
             {
-                string extension = Path.GetExtension(file_str);
-                if(extension == ".rmd")
+                foreach(string file in GetFilesList(file_str))
                 {
-                    rmd_files.Add(file_str);
-                    lstDrop.Items.Add(Path.GetFileNameWithoutExtension(file_str));
+                    MessageBox.Show(file);
                 }
-
             }
         }
+
+        private List<String> GetFilesList(String dir)
+        {
+            List<String> results = new List<string>();
+
+            if (File.GetAttributes(dir).HasFlag(FileAttributes.Directory))
+            {
+                List<string> rmd_files = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
+                    .Where(file => new string[] { ".rmd" }
+                    .Contains(Path.GetExtension(file)))
+                    .ToList();
+                results.AddRange(rmd_files);
+            }
+            else
+            {
+                results.Add(dir);
+            }
+
+            return results;
+        }
+                
 
         private void btnStitch_Click(object sender, EventArgs e)
         {
@@ -64,8 +82,8 @@ namespace Stitch2
             Process p = new Process();
             //p.StartInfo.UseShellExecute = false;
             //p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.FileName = "Powershell.exe";
-            p.StartInfo.Arguments = "-executionpolicy remotesigned -File  Stitch.ps1 -f " + fileName;
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.Arguments = "powershell -windowstyle hidden -executionpolicy remotesigned -File  Stitch.ps1 -f " + fileName;
             p.Start();
 
             p.WaitForExit();
