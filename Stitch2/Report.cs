@@ -34,15 +34,17 @@ namespace Stitch2
             foreach(String pass in passed)
             {
                 String name = Path.GetFileNameWithoutExtension(pass);
-                book.Add(name, pass);
+                book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
                 lstSucceed.Items.Add(name);
             }
             foreach (String fail in failed)
             {
                 String name = Path.GetFileNameWithoutExtension(fail);
-                book.Add(name, fail);
+                book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
                 lstFail.Items.Add(name);
             }
+            lblfail.Text = "Failed(" + failed.Count.ToString() + ")"; 
+            lblsuccess.Text = "Success(" + passed.Count.ToString() + ")";
         }
 
         private void lstSucceed_DoubleClick(object sender, EventArgs e)
@@ -56,7 +58,7 @@ namespace Stitch2
             else
             {
                 String file_ankasa = book[lstSucceed.SelectedItems[0].Text];
-                System.Diagnostics.Process.Start(file_ankasa);
+                System.Diagnostics.Process.Start(file_ankasa + ".docx");
 
 
                 //Make the label blue
@@ -69,14 +71,10 @@ namespace Stitch2
         private void lstFail_DoubleClick(object sender, EventArgs e)
         {
 
-            if (lstFail.SelectedItems.Count == 0)
-            {
-
-            }
-            else
+            if (lstFail.SelectedItems.Count != 0)
             {
                 String file_ankasa = book[lstFail.SelectedItems[0].Text];
-                System.Diagnostics.Process.Start(file_ankasa);
+                System.Diagnostics.Process.Start(file_ankasa + ".rmd");
 
 
                 //Make the label blue

@@ -28,29 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblsuccess = new System.Windows.Forms.Label();
+            this.lblfail = new System.Windows.Forms.Label();
             this.lstSucceed = new System.Windows.Forms.ListView();
             this.lstFail = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
-            // label1
+            // lblsuccess
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(116, 86);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 17);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Success ( 12 )";
+            this.lblsuccess.AutoSize = true;
+            this.lblsuccess.Location = new System.Drawing.Point(116, 86);
+            this.lblsuccess.Name = "lblsuccess";
+            this.lblsuccess.Size = new System.Drawing.Size(99, 17);
+            this.lblsuccess.TabIndex = 2;
+            this.lblsuccess.Text = "Success ( 12 )";
             // 
-            // label2
+            // lblfail
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(434, 84);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 17);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Failed(15)";
+            this.lblfail.AutoSize = true;
+            this.lblfail.Location = new System.Drawing.Point(434, 84);
+            this.lblfail.Name = "lblfail";
+            this.lblfail.Size = new System.Drawing.Size(72, 17);
+            this.lblfail.TabIndex = 2;
+            this.lblfail.Text = "Failed(15)";
             // 
             // lstSucceed
             // 
@@ -87,8 +87,8 @@
             this.ClientSize = new System.Drawing.Size(636, 553);
             this.Controls.Add(this.lstFail);
             this.Controls.Add(this.lstSucceed);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblfail);
+            this.Controls.Add(this.lblsuccess);
             this.Name = "Report";
             this.Text = "Report";
             this.Load += new System.EventHandler(this.Report_Load);
@@ -98,8 +98,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblsuccess;
+        private System.Windows.Forms.Label lblfail;
         private System.Windows.Forms.ListView lstSucceed;
         private System.Windows.Forms.ListView lstFail;
     }
