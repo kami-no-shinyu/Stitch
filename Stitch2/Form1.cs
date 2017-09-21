@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -41,6 +42,12 @@ namespace Stitch2
                     }
                 }
             }
+
+            pictureBox3.Visible = false;
+            RenderLabel();
+            lblCount.Text = rmd_files.Count.ToString();
+            lblCount.Visible = true;
+            lblDrop.Text = "RMD files dropped";
         }
     
         //Returns list of all rmd files in a dir
@@ -58,63 +65,135 @@ namespace Stitch2
             }
             else
             {
-                results.Add(dir);
+                if (Path.HasExtension(dir))
+                {
+                    if (Path.GetExtension(dir) == ".rmd" || Path.GetExtension(dir) == ".RMD")
+                    {
+                        results.Add(dir);
+                    }
+                }
             }
 
             return results;
         }
                 
 
+        private void RenderLabel()
+        {
+            int x2 = (pnlFolder.Size.Width - lblCount.Size.Width) / 2;
+            lblCount.Location = new Point(x2, lblCount.Location.Y);
+        }
+
         private void BtnStitch_Click(object sender, EventArgs e)
         {
-            //Save the stuff to text file 
-            String desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            String fileName = desktop_path + "\\" + new DateTime().ToString("yyyyMMddHHmmssffff") + ".txt";
-
-            TextWriter tw = new StreamWriter(fileName);
-            foreach(String s in rmd_files)
+            if(rmd_files.Count <= 0)
             {
-                tw.WriteLine(s.Replace("\\", @"/"));
+                MessageBox.Show("No RMD files have been selected");
             }
-            tw.Close();
+            else if(rmd_files.Count == 1)
+            {
+                MessageBox.Show("I'm sorry, can't work with just single files atm :(");
+            }
+            else
+            {
+                //Save the stuff to text file 
+                String desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                String fileName = desktop_path + "\\" + new DateTime().ToString("yyyyMMddHHmmssffff") + ".txt";
 
-            //Run the program on the text file
-            Process p = new Process();
-            p.StartInfo.FileName = "powershell";
-            p.StartInfo.Arguments = " -executionpolicy remotesigned -File  Stitch.ps1 -f " + fileName;
-            p.Start();
+                TextWriter tw = new StreamWriter(fileName);
+                foreach (String s in rmd_files)
+                {
+                    tw.WriteLine(s.Replace("\\", @"/"));
+                }
+                tw.Close();
 
-            p.WaitForExit();
+                //Run the program on the text file
+                Process p = new Process();
+                p.StartInfo.FileName = "powershell";
+                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  Stitch.ps1 -f " + fileName;
+                p.Start();
 
-            //Get the response from the resultant text file
-            List<String> passed = new List<string>();
-            List<String> failed = new List<string>();
+                p.WaitForExit();
 
-            IEnumerable<string> lines = File.ReadLines(fileName + "-fail.txt");
-            foreach (string line in lines) failed.Add(line);
+                //Get the response from the resultant text file
+                List<String> passed = new List<string>();
+                List<String> failed = new List<string>();
 
-            IEnumerable<string> lines2 = File.ReadLines(fileName + "-succeed.txt");
-            foreach (string line in lines2) passed.Add(line);
+                IEnumerable<string> lines = File.ReadLines(fileName + "-fail.txt");
+                foreach (string line in lines) failed.Add(line);
+
+                IEnumerable<string> lines2 = File.ReadLines(fileName + "-succeed.txt");
+                foreach (string line in lines2) passed.Add(line);
 
 
-            if (File.Exists(fileName)) File.Delete(fileName);
-            if (File.Exists(fileName + "-fail.txt")) File.Delete(fileName + "-fail.txt");
-            if (File.Exists(fileName + "-succeed.txt")) File.Delete(fileName + "-succeed.txt");
-            //Send Data to the other form
-            Report b = new Report();
-            b.LoadDetails(passed, failed);
-            b.Show();
+                if (File.Exists(fileName)) File.Delete(fileName);
+                if (File.Exists(fileName + "-fail.txt")) File.Delete(fileName + "-fail.txt");
+                if (File.Exists(fileName + "-succeed.txt")) File.Delete(fileName + "-succeed.txt");
+                //Send Data to the other form
+                Report b = new Report();
+                b.LoadDetails(passed, failed);
+                b.Show();
+                Hide();
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             this.CenterToScreen();
+            RenderLabel();
+
+            String pandoc_path = GetFullPath("pandoc.exe");
+            String rscript_path = GetFullPath("Rscript.exe");
+
+
+            if (pandoc_path == null || rscript_path == null)
+            {
+                Process.Start("Patho.exe");
+                Close();
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public static bool ExistsOnPath(string fileName)
+        {
+            return GetFullPath(fileName) != null;
+        }
+
+        public static string GetFullPath(string fileName)
+        {
+            if (File.Exists(fileName))
+                return Path.GetFullPath(fileName);
+
+            var values = Environment.GetEnvironmentVariable("PATH");
+            foreach (var path in values.Split(';'))
+            {
+                var fullPath = Path.Combine(path, fileName);
+                if (File.Exists(fullPath))
+                    return fullPath;
+            }
+            return null;
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
         {
             rmd_files.Clear();
             lstDrop.Items.Clear();
+            lblDrop.Text = "Drop Files/Folders Here";
+            pictureBox3.Visible = true;
+            lblCount.Visible = false;
+            RenderLabel();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
+
+
+
 }

@@ -82,5 +82,10 @@ namespace Stitch2
                 lstFail.SelectedItems[0].ForeColor = Color.White;
             }
         }
+
+        private void Report_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
