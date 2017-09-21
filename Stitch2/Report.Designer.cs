@@ -32,7 +32,7 @@
             this.lblsuccess = new System.Windows.Forms.Label();
             this.lblfail = new System.Windows.Forms.Label();
             this.lstSucceed = new System.Windows.Forms.ListView();
-            this.lstFail = new System.Windows.Forms.ListView();
+            this.lstDrop = new System.Windows.Forms.ListView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -80,19 +80,19 @@
             // 
             // lstFail
             // 
-            this.lstFail.FullRowSelect = true;
-            this.lstFail.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lstFail.HideSelection = false;
-            this.lstFail.LabelWrap = false;
-            this.lstFail.Location = new System.Drawing.Point(343, 126);
-            this.lstFail.MultiSelect = false;
-            this.lstFail.Name = "lstFail";
-            this.lstFail.Size = new System.Drawing.Size(247, 404);
-            this.lstFail.TabIndex = 4;
-            this.lstFail.TileSize = new System.Drawing.Size(200, 40);
-            this.lstFail.UseCompatibleStateImageBehavior = false;
-            this.lstFail.View = System.Windows.Forms.View.List;
-            this.lstFail.DoubleClick += new System.EventHandler(this.LstFail_DoubleClick);
+            this.lstDrop.FullRowSelect = true;
+            this.lstDrop.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lstDrop.HideSelection = false;
+            this.lstDrop.LabelWrap = false;
+            this.lstDrop.Location = new System.Drawing.Point(343, 126);
+            this.lstDrop.MultiSelect = false;
+            this.lstDrop.Name = "lstFail";
+            this.lstDrop.Size = new System.Drawing.Size(247, 404);
+            this.lstDrop.TabIndex = 4;
+            this.lstDrop.TileSize = new System.Drawing.Size(200, 40);
+            this.lstDrop.UseCompatibleStateImageBehavior = false;
+            this.lstDrop.View = System.Windows.Forms.View.List;
+            this.lstDrop.DoubleClick += new System.EventHandler(this.LstFail_DoubleClick);
             // 
             // panel1
             // 
@@ -147,7 +147,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(636, 553);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.lstFail);
+            this.Controls.Add(this.lstDrop);
             this.Controls.Add(this.lstSucceed);
             this.Controls.Add(this.lblfail);
             this.Controls.Add(this.lblsuccess);
@@ -158,6 +158,7 @@
             this.Text = "Report";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Report_FormClosing);
+            this.Load += new System.EventHandler(this.Report_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -170,7 +171,7 @@
         private System.Windows.Forms.Label lblsuccess;
         private System.Windows.Forms.Label lblfail;
         private System.Windows.Forms.ListView lstSucceed;
-        private System.Windows.Forms.ListView lstFail;
+        private System.Windows.Forms.ListView lstDrop;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;

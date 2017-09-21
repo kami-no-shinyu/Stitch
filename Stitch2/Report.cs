@@ -18,7 +18,7 @@ namespace Stitch2
         // Dictionary containing the raw name of book to its path
         public Dictionary<String, String> book = new Dictionary<string, string>();
 
-        public void LoadDetails(List<String> passed,List<String> failed)
+        public void LoadDetails2(List<String> passed,List<String> failed)
         {
             foreach(String pass in passed)
             {
@@ -30,12 +30,43 @@ namespace Stitch2
             {
                 String name = Path.GetFileNameWithoutExtension(fail);
                 book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
-                lstFail.Items.Add(name);
+                lstDrop.Items.Add(name);
             }
             lblfail.Text = "Failed (" + failed.Count.ToString() + ")"; 
             lblsuccess.Text = "Success (" + passed.Count.ToString() + ")";
         }
 
+        public void LoadDetails(List<String> passed, List<String> failed)
+        {
+            for (int i = 0; i < passed.Count; ++i)
+            {
+                String name = Path.GetFileNameWithoutExtension(passed[i]);
+                book.Add(i.ToString(), Path.GetDirectoryName(passed[i]) + @"\" + name);
+                lstSucceed.Items.Add(name);
+            }
+
+            for (int i = 0; i < failed.Count; ++i)
+            {
+                String name = Path.GetFileNameWithoutExtension(failed[i]);
+                book.Add((i+passed.Count).ToString(), Path.GetDirectoryName(failed[i]) + @"\" + name);
+                lstDrop.Items.Add(name);
+            }
+
+            //foreach (String pass in passed)
+            //{
+            //    String name = Path.GetFileNameWithoutExtension(pass);
+            //    book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
+            //    lstSucceed.Items.Add(name);
+            //}
+            //foreach (String fail in failed)
+            //{
+            //    String name = Path.GetFileNameWithoutExtension(fail);
+            //    book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
+            //    lstDrop.Items.Add(name);
+            //}
+            lblfail.Text = "Failed (" + failed.Count.ToString() + ")";
+            lblsuccess.Text = "Success (" + passed.Count.ToString() + ")";
+        }
         private void LstSucceed_DoubleClick(object sender, EventArgs e)
         {
 
@@ -54,19 +85,24 @@ namespace Stitch2
         private void LstFail_DoubleClick(object sender, EventArgs e)
         {
 
-            if (lstFail.SelectedItems.Count != 0)
+            if (lstDrop.SelectedItems.Count != 0)
             {
-                String file_ankasa = book[lstFail.SelectedItems[0].Text];
+                String file_ankasa = book[lstDrop.SelectedItems[0].Text];
                 System.Diagnostics.Process.Start(file_ankasa + ".rmd");
                 
-                lstFail.SelectedItems[0].BackColor = Color.Blue;
-                lstFail.SelectedItems[0].ForeColor = Color.White;
+                lstDrop.SelectedItems[0].BackColor = Color.Blue;
+                lstDrop.SelectedItems[0].ForeColor = Color.White;
             }
         }
 
         private void Report_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void Report_Load(object sender, EventArgs e)
+        {
+                
         }
     }
 }

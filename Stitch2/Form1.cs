@@ -175,7 +175,10 @@ namespace Stitch2
             return results;
         }
 
-       
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 
 
