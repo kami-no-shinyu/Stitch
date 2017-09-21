@@ -45,7 +45,7 @@
             // 
             this.lblsuccess.AutoSize = true;
             this.lblsuccess.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblsuccess.Location = new System.Drawing.Point(113, 70);
+            this.lblsuccess.Location = new System.Drawing.Point(113, 88);
             this.lblsuccess.Name = "lblsuccess";
             this.lblsuccess.Size = new System.Drawing.Size(133, 28);
             this.lblsuccess.TabIndex = 2;
@@ -55,7 +55,7 @@
             // 
             this.lblfail.AutoSize = true;
             this.lblfail.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
-            this.lblfail.Location = new System.Drawing.Point(418, 69);
+            this.lblfail.Location = new System.Drawing.Point(419, 88);
             this.lblfail.Name = "lblfail";
             this.lblfail.Size = new System.Drawing.Size(97, 28);
             this.lblfail.TabIndex = 2;
@@ -67,15 +67,16 @@
             this.lstSucceed.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lstSucceed.HideSelection = false;
             this.lstSucceed.LabelWrap = false;
-            this.lstSucceed.Location = new System.Drawing.Point(47, 111);
+            this.lstSucceed.Location = new System.Drawing.Point(47, 126);
             this.lstSucceed.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
+            this.lstSucceed.MultiSelect = false;
             this.lstSucceed.Name = "lstSucceed";
             this.lstSucceed.Size = new System.Drawing.Size(247, 404);
             this.lstSucceed.TabIndex = 3;
             this.lstSucceed.TileSize = new System.Drawing.Size(240, 20);
             this.lstSucceed.UseCompatibleStateImageBehavior = false;
             this.lstSucceed.View = System.Windows.Forms.View.List;
-            this.lstSucceed.DoubleClick += new System.EventHandler(this.lstSucceed_DoubleClick);
+            this.lstSucceed.DoubleClick += new System.EventHandler(this.LstSucceed_DoubleClick);
             // 
             // lstFail
             // 
@@ -83,15 +84,15 @@
             this.lstFail.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lstFail.HideSelection = false;
             this.lstFail.LabelWrap = false;
-            this.lstFail.Location = new System.Drawing.Point(343, 111);
+            this.lstFail.Location = new System.Drawing.Point(343, 126);
+            this.lstFail.MultiSelect = false;
             this.lstFail.Name = "lstFail";
             this.lstFail.Size = new System.Drawing.Size(247, 404);
             this.lstFail.TabIndex = 4;
             this.lstFail.TileSize = new System.Drawing.Size(200, 40);
             this.lstFail.UseCompatibleStateImageBehavior = false;
             this.lstFail.View = System.Windows.Forms.View.List;
-            this.lstFail.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
-            this.lstFail.DoubleClick += new System.EventHandler(this.lstFail_DoubleClick);
+            this.lstFail.DoubleClick += new System.EventHandler(this.LstFail_DoubleClick);
             // 
             // panel1
             // 
@@ -157,7 +158,6 @@
             this.Text = "Report";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Report_FormClosing);
-            this.Load += new System.EventHandler(this.Report_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

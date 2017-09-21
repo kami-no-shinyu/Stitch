@@ -37,18 +37,18 @@
             this.lstDrop = new System.Windows.Forms.ListBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblDrop = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.img_folder = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
             this.pnlFolder = new System.Windows.Forms.Panel();
             this.lblCount = new System.Windows.Forms.Label();
             this.dependencyFolderLocator = new System.Windows.Forms.FolderBrowserDialog();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.btnClearList = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.img_folder)).BeginInit();
             this.pnlFolder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnClearList)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -69,7 +69,7 @@
             this.btnStitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStitch.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStitch.ForeColor = System.Drawing.Color.White;
-            this.btnStitch.Location = new System.Drawing.Point(182, 363);
+            this.btnStitch.Location = new System.Drawing.Point(181, 363);
             this.btnStitch.Name = "btnStitch";
             this.btnStitch.Size = new System.Drawing.Size(101, 34);
             this.btnStitch.TabIndex = 2;
@@ -110,7 +110,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(450, 62);
             this.panel1.TabIndex = 6;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // lstDrop
             // 
@@ -153,16 +152,16 @@
             this.lblDrop.Text = "Drop Files / Folders Here";
             this.lblDrop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pictureBox3
+            // img_folder
             // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(51, 21);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(117, 105);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 9;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
+            this.img_folder.Image = ((System.Drawing.Image)(resources.GetObject("img_folder.Image")));
+            this.img_folder.Location = new System.Drawing.Point(51, 21);
+            this.img_folder.Name = "img_folder";
+            this.img_folder.Size = new System.Drawing.Size(117, 105);
+            this.img_folder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.img_folder.TabIndex = 9;
+            this.img_folder.TabStop = false;
+            this.img_folder.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             // 
             // label4
             // 
@@ -180,7 +179,7 @@
             this.pnlFolder.AllowDrop = true;
             this.pnlFolder.BackColor = System.Drawing.Color.Transparent;
             this.pnlFolder.Controls.Add(this.lblCount);
-            this.pnlFolder.Controls.Add(this.pictureBox3);
+            this.pnlFolder.Controls.Add(this.img_folder);
             this.pnlFolder.Controls.Add(this.lblDrop);
             this.pnlFolder.Location = new System.Drawing.Point(110, 134);
             this.pnlFolder.Name = "pnlFolder";
@@ -195,9 +194,9 @@
             this.lblCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCount.Font = new System.Drawing.Font("Segoe UI", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(144)))), ((int)(((byte)(225)))));
-            this.lblCount.Location = new System.Drawing.Point(40, 12);
+            this.lblCount.Location = new System.Drawing.Point(42, 12);
             this.lblCount.Name = "lblCount";
-            this.lblCount.Size = new System.Drawing.Size(91, 106);
+            this.lblCount.Size = new System.Drawing.Size(177, 106);
             this.lblCount.TabIndex = 12;
             this.lblCount.Text = "1";
             this.lblCount.Visible = false;
@@ -208,16 +207,16 @@
             // 
             this.dependencyFolderLocator.RootFolder = System.Environment.SpecialFolder.ProgramFiles;
             // 
-            // pictureBox4
+            // btnClearList
             // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(311, 114);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 12;
-            this.pictureBox4.TabStop = false;
-            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
+            this.btnClearList.Image = ((System.Drawing.Image)(resources.GetObject("btnClearList.Image")));
+            this.btnClearList.Location = new System.Drawing.Point(311, 114);
+            this.btnClearList.Name = "btnClearList";
+            this.btnClearList.Size = new System.Drawing.Size(30, 30);
+            this.btnClearList.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnClearList.TabIndex = 12;
+            this.btnClearList.TabStop = false;
+            this.btnClearList.Click += new System.EventHandler(this.BtnClearList_Click);
             // 
             // Form1
             // 
@@ -226,7 +225,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(450, 415);
-            this.Controls.Add(this.pictureBox4);
+            this.Controls.Add(this.btnClearList);
             this.Controls.Add(this.pnlFolder);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.pictureBox2);
@@ -240,13 +239,15 @@
             this.Text = "Stitch";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.img_folder)).EndInit();
             this.pnlFolder.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnClearList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,12 +263,12 @@
         private System.Windows.Forms.ListBox lstDrop;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lblDrop;
-        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox img_folder;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel pnlFolder;
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.FolderBrowserDialog dependencyFolderLocator;
-        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.PictureBox btnClearList;
     }
 }
 

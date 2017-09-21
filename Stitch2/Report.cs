@@ -13,22 +13,11 @@ namespace Stitch2
 {
     public partial class Report : Form
     {
-        public Report()
-        {
-            InitializeComponent();
-        }
+        public Report(){InitializeComponent();}
 
-        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Report_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        // Dictionary containing the raw name of book to its path
         public Dictionary<String, String> book = new Dictionary<string, string>();
+
         public void LoadDetails(List<String> passed,List<String> failed)
         {
             foreach(String pass in passed)
@@ -43,24 +32,18 @@ namespace Stitch2
                 book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
                 lstFail.Items.Add(name);
             }
-            lblfail.Text = "Failed(" + failed.Count.ToString() + ")"; 
-            lblsuccess.Text = "Success(" + passed.Count.ToString() + ")";
+            lblfail.Text = "Failed (" + failed.Count.ToString() + ")"; 
+            lblsuccess.Text = "Success (" + passed.Count.ToString() + ")";
         }
 
-        private void lstSucceed_DoubleClick(object sender, EventArgs e)
+        private void LstSucceed_DoubleClick(object sender, EventArgs e)
         {
-            //Open the selected index's rmd file 
 
-            if(lstSucceed.SelectedItems.Count == 0)
-            {
-
-            }
-            else
+            if(lstSucceed.SelectedItems.Count > 0)
             {
                 String file_ankasa = book[lstSucceed.SelectedItems[0].Text];
                 System.Diagnostics.Process.Start(file_ankasa + ".docx");
-
-
+                
                 //Make the label blue
                 lstSucceed.SelectedItems[0].BackColor = Color.Blue;
                 lstSucceed.SelectedItems[0].ForeColor = Color.White;
@@ -68,16 +51,14 @@ namespace Stitch2
           
         }
 
-        private void lstFail_DoubleClick(object sender, EventArgs e)
+        private void LstFail_DoubleClick(object sender, EventArgs e)
         {
 
             if (lstFail.SelectedItems.Count != 0)
             {
                 String file_ankasa = book[lstFail.SelectedItems[0].Text];
                 System.Diagnostics.Process.Start(file_ankasa + ".rmd");
-
-
-                //Make the label blue
+                
                 lstFail.SelectedItems[0].BackColor = Color.Blue;
                 lstFail.SelectedItems[0].ForeColor = Color.White;
             }
