@@ -38,32 +38,50 @@ namespace Stitch2
 
         public void LoadDetails(List<String> passed, List<String> failed)
         {
-            for (int i = 0; i < passed.Count; ++i)
+            //for (int i = 0; i < passed.Count; ++i)
+            //{
+            //    String name = Path.GetFileNameWithoutExtension(passed[i]);
+            //    book.Add(i.ToString(), Path.GetDirectoryName(passed[i]) + @"\" + name);
+            //    lstSucceed.Items.Add(name);
+            //}
+
+            //for (int i = 0; i < failed.Count; ++i)
+            //{
+            //    String name = Path.GetFileNameWithoutExtension(failed[i]);
+            //    book.Add((i+passed.Count).ToString(), Path.GetDirectoryName(failed[i]) + @"\" + name);
+            //    lstDrop.Items.Add(name);
+            //}
+
+            int count = 0;
+            foreach (String pass in passed)
             {
-                String name = Path.GetFileNameWithoutExtension(passed[i]);
-                book.Add(i.ToString(), Path.GetDirectoryName(passed[i]) + @"\" + name);
+                String name = Path.GetFileNameWithoutExtension(pass);
+                if (book.ContainsKey(name))
+                {
+                    name = name + "-copy-" + count.ToString();
+                    book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
+                }
+                else
+                {    
+                    book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
+                }
                 lstSucceed.Items.Add(name);
             }
-
-            for (int i = 0; i < failed.Count; ++i)
+            foreach (String fail in failed)
             {
-                String name = Path.GetFileNameWithoutExtension(failed[i]);
-                book.Add((i+passed.Count).ToString(), Path.GetDirectoryName(failed[i]) + @"\" + name);
+                String name = Path.GetFileNameWithoutExtension(fail);
+                if (book.ContainsKey(name))
+                {
+                    name = name + "-copy-" + count.ToString();
+                    book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
+                }
+                else
+                {
+                    book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
+                }
                 lstDrop.Items.Add(name);
             }
 
-            //foreach (String pass in passed)
-            //{
-            //    String name = Path.GetFileNameWithoutExtension(pass);
-            //    book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
-            //    lstSucceed.Items.Add(name);
-            //}
-            //foreach (String fail in failed)
-            //{
-            //    String name = Path.GetFileNameWithoutExtension(fail);
-            //    book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
-            //    lstDrop.Items.Add(name);
-            //}
             lblfail.Text = "Failed (" + failed.Count.ToString() + ")";
             lblsuccess.Text = "Success (" + passed.Count.ToString() + ")";
         }
