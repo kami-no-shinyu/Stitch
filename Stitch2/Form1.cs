@@ -61,7 +61,6 @@ namespace Stitch2
         private void BtnStitch_Click(object sender, EventArgs e)
         {
             if (RMD_FILES.Count == 0) {MessageBox.Show(Data.NO_RMD_FILES,"Info", MessageBoxButtons.OK,MessageBoxIcon.Warning);}
-            else if (RMD_FILES.Count == 1) { MessageBox.Show(Data.ONLY_ONE_RMD, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             else
             {
                 // Save the paths of RMDs to text file 
@@ -74,7 +73,7 @@ namespace Stitch2
                 // Run the stitcher ppwershell on the text file
                 Process p = new Process();
                 p.StartInfo.FileName = "powershell";
-                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  Stitch.ps1 -f " + fileName;
+                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  Stitch2.ps1 -f " + fileName;
                 p.Start();
                 p.WaitForExit();
 

@@ -38,20 +38,7 @@ namespace Stitch2
 
         public void LoadDetails(List<String> passed, List<String> failed)
         {
-            //for (int i = 0; i < passed.Count; ++i)
-            //{
-            //    String name = Path.GetFileNameWithoutExtension(passed[i]);
-            //    book.Add(i.ToString(), Path.GetDirectoryName(passed[i]) + @"\" + name);
-            //    lstSucceed.Items.Add(name);
-            //}
-
-            //for (int i = 0; i < failed.Count; ++i)
-            //{
-            //    String name = Path.GetFileNameWithoutExtension(failed[i]);
-            //    book.Add((i+passed.Count).ToString(), Path.GetDirectoryName(failed[i]) + @"\" + name);
-            //    lstDrop.Items.Add(name);
-            //}
-
+           
             int count = 0;
             foreach (String pass in passed)
             {
