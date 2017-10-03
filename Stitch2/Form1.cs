@@ -156,7 +156,7 @@ namespace Stitch2
             if (File.GetAttributes(dir).HasFlag(FileAttributes.Directory))
             {
                 List<string> rmd_files = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
-                    .Where(file => new string[] { ".rmd" }
+                    .Where(file => new string[] { ".rmd",".RMD",".Rmd"}
                     .Contains(Path.GetExtension(file)))
                     .ToList();
                 results.AddRange(rmd_files);
@@ -165,7 +165,7 @@ namespace Stitch2
             {
                 if (Path.HasExtension(dir))
                 {
-                    if (Path.GetExtension(dir) == ".rmd" || Path.GetExtension(dir) == ".RMD")
+                    if (Path.GetExtension(dir).ToLower() == ".rmd")
                     {
                         results.Add(dir);
                     }

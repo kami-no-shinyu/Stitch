@@ -91,7 +91,21 @@ namespace Stitch2
             if(lstSucceed.SelectedItems.Count > 0)
             {
                 String file_ankasa = book[lstSucceed.SelectedItems[0].Text];
-                System.Diagnostics.Process.Start(file_ankasa + ".docx");
+                try
+                {
+                    System.Diagnostics.Process.Start(file_ankasa + ".Rmd.docx");
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(file_ankasa + ".RMD.docx");
+                    }
+                    catch (Exception)
+                    {
+                        System.Diagnostics.Process.Start(file_ankasa + ".rmd.docx");
+                    }
+                }
                 
                 //Make the label blue
                 lstSucceed.SelectedItems[0].BackColor = Color.Blue;
@@ -106,7 +120,21 @@ namespace Stitch2
             if (lstDrop.SelectedItems.Count != 0)
             {
                 String file_ankasa = book[lstDrop.SelectedItems[0].Text];
-                System.Diagnostics.Process.Start(file_ankasa + ".rmd");
+                try
+                {
+                    System.Diagnostics.Process.Start(file_ankasa + ".rmd");
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(file_ankasa + ".Rmd");
+                    }
+                    catch (Exception)
+                    {
+                        System.Diagnostics.Process.Start(file_ankasa + ".RMD");
+                    }
+                }
                 
                 lstDrop.SelectedItems[0].BackColor = Color.Blue;
                 lstDrop.SelectedItems[0].ForeColor = Color.White;
