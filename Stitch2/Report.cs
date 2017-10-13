@@ -13,129 +13,91 @@ namespace Stitch2
 {
     public partial class Report : Form
     {
+        private Form parent;
         public Report(){InitializeComponent();}
 
         // Dictionary containing the raw name of book to its path
-        public Dictionary<String, String> book = new Dictionary<string, string>();
+        public Dictionary<String, RMD> book = new Dictionary<string, RMD>();
 
-        public void LoadDetails2(List<String> passed,List<String> failed)
+        public void SetRMDFiles(List<RMD> passed_rmds)
         {
-            foreach(String pass in passed)
+            int fail_count = 0;
+            int success_count = 0;
+
+            foreach(RMD rmd in passed_rmds)
             {
-                String name = Path.GetFileNameWithoutExtension(pass);
-                book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
-                lstSucceed.Items.Add(name);
+                if (book.ContainsKey(rmd.author))
+                {
+                    book[rmd.author] = rmd;
+                } else
+                {
+                    book.Add(rmd.author, rmd);
+                }
+
+                if (rmd.passed)
+                {
+                    success_count++;
+                    lstSuccess2.Items.Add(rmd.author);
+                } else
+                {
+                    fail_count++;
+                    lstFailed2.Items.Add(rmd.author);
+                }
             }
-            foreach (String fail in failed)
-            {
-                String name = Path.GetFileNameWithoutExtension(fail);
-                book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
-                lstDrop.Items.Add(name);
-            }
-            lblfail.Text = "Failed (" + failed.Count.ToString() + ")"; 
-            lblsuccess.Text = "Success (" + passed.Count.ToString() + ")";
+
+            lblfail.Text = "Failed (" + fail_count.ToString() + ")";
+            lblsuccess.Text = "Success (" + success_count.ToString() + ")";
         }
 
-        public void LoadDetails(List<String> passed, List<String> failed)
-        {
-           
-            int count = 0;
-            foreach (String pass in passed)
-            {
-                String name = Path.GetFileNameWithoutExtension(pass);
-                if (book.ContainsKey(name))
-                {
-                    name = name + "-copy-" + count.ToString();
-                    book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
-                }
-                else
-                {    
-                    book.Add(name, Path.GetDirectoryName(pass) + @"\" + name);
-                }
-                lstSucceed.Items.Add(name);
-            }
-            foreach (String fail in failed)
-            {
-                String name = Path.GetFileNameWithoutExtension(fail);
-                if (book.ContainsKey(name))
-                {
-                    name = name + "-copy-" + count.ToString();
-                    book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
-                }
-                else
-                {
-                    book.Add(name, Path.GetDirectoryName(fail) + @"\" + name);
-                }
-                lstDrop.Items.Add(name);
-            }
-
-            lblfail.Text = "Failed (" + failed.Count.ToString() + ")";
-            lblsuccess.Text = "Success (" + passed.Count.ToString() + ")";
-        }
-        private void LstSucceed_DoubleClick(object sender, EventArgs e)
-        {
-
-            if(lstSucceed.SelectedItems.Count > 0)
-            {
-                String file_ankasa = book[lstSucceed.SelectedItems[0].Text];
-                try
-                {
-                    System.Diagnostics.Process.Start(file_ankasa + ".Rmd.docx");
-                }
-                catch (Exception)
-                {
-                    try
-                    {
-                        System.Diagnostics.Process.Start(file_ankasa + ".RMD.docx");
-                    }
-                    catch (Exception)
-                    {
-                        System.Diagnostics.Process.Start(file_ankasa + ".rmd.docx");
-                    }
-                }
-                
-                //Make the label blue
-                lstSucceed.SelectedItems[0].BackColor = Color.Blue;
-                lstSucceed.SelectedItems[0].ForeColor = Color.White;
-            }
-          
-        }
-
-        private void LstFail_DoubleClick(object sender, EventArgs e)
-        {
-
-            if (lstDrop.SelectedItems.Count != 0)
-            {
-                String file_ankasa = book[lstDrop.SelectedItems[0].Text];
-                try
-                {
-                    System.Diagnostics.Process.Start(file_ankasa + ".rmd");
-                }
-                catch (Exception)
-                {
-                    try
-                    {
-                        System.Diagnostics.Process.Start(file_ankasa + ".Rmd");
-                    }
-                    catch (Exception)
-                    {
-                        System.Diagnostics.Process.Start(file_ankasa + ".RMD");
-                    }
-                }
-                
-                lstDrop.SelectedItems[0].BackColor = Color.Blue;
-                lstDrop.SelectedItems[0].ForeColor = Color.White;
-            }
-        }
-
+        
         private void Report_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
+            parent.Show();
+            //Application.Exit();
         }
 
+        public void SetParentForm(Form parent)
+        {
+            this.parent = parent;
+        }
         private void Report_Load(object sender, EventArgs e)
         {
-                
+
+        }
+
+        private void LstSucceed_DoubleClick(object sender, MouseEventArgs e)
+        {
+            if (lstSuccess2.SelectedItems.Count > 0)
+            {
+                String file_ankasa = book[lstSuccess2.SelectedItem.ToString()].result_prefix;
+                try
+                {
+                    System.Diagnostics.Process.Start(file_ankasa + ".docx");
+                }
+                catch (Exception)
+                {
+
+                }
+
+                //Make the label blue
+                lstSuccess2.SetItemChecked(lstSuccess2.SelectedIndex, true);
+            }
+        }
+
+        private void LstFailed_DoubleClick(object sender, EventArgs e)
+        {
+            if (lstFailed2.SelectedItems.Count != 0)
+            {
+                String file_ankasa = book[lstFailed2.SelectedItem.ToString()].file;
+                try
+                {
+                    System.Diagnostics.Process.Start(file_ankasa);
+                }
+                catch (Exception) { }
+
+                lstFailed2.SetItemChecked(lstFailed2.SelectedIndex, true);
+
+            }
         }
     }
 }

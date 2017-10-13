@@ -31,12 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Report));
             this.lblsuccess = new System.Windows.Forms.Label();
             this.lblfail = new System.Windows.Forms.Label();
-            this.lstSucceed = new System.Windows.Forms.ListView();
-            this.lstDrop = new System.Windows.Forms.ListView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.lstSuccess2 = new System.Windows.Forms.CheckedListBox();
+            this.lstFailed2 = new System.Windows.Forms.CheckedListBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -60,39 +60,6 @@
             this.lblfail.Size = new System.Drawing.Size(97, 28);
             this.lblfail.TabIndex = 2;
             this.lblfail.Text = "Failed(15)";
-            // 
-            // lstSucceed
-            // 
-            this.lstSucceed.FullRowSelect = true;
-            this.lstSucceed.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lstSucceed.HideSelection = false;
-            this.lstSucceed.LabelWrap = false;
-            this.lstSucceed.Location = new System.Drawing.Point(47, 126);
-            this.lstSucceed.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
-            this.lstSucceed.MultiSelect = false;
-            this.lstSucceed.Name = "lstSucceed";
-            this.lstSucceed.Size = new System.Drawing.Size(247, 404);
-            this.lstSucceed.TabIndex = 3;
-            this.lstSucceed.TileSize = new System.Drawing.Size(240, 20);
-            this.lstSucceed.UseCompatibleStateImageBehavior = false;
-            this.lstSucceed.View = System.Windows.Forms.View.List;
-            this.lstSucceed.DoubleClick += new System.EventHandler(this.LstSucceed_DoubleClick);
-            // 
-            // lstFail
-            // 
-            this.lstDrop.FullRowSelect = true;
-            this.lstDrop.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lstDrop.HideSelection = false;
-            this.lstDrop.LabelWrap = false;
-            this.lstDrop.Location = new System.Drawing.Point(343, 126);
-            this.lstDrop.MultiSelect = false;
-            this.lstDrop.Name = "lstFail";
-            this.lstDrop.Size = new System.Drawing.Size(247, 404);
-            this.lstDrop.TabIndex = 4;
-            this.lstDrop.TileSize = new System.Drawing.Size(200, 40);
-            this.lstDrop.UseCompatibleStateImageBehavior = false;
-            this.lstDrop.View = System.Windows.Forms.View.List;
-            this.lstDrop.DoubleClick += new System.EventHandler(this.LstFail_DoubleClick);
             // 
             // panel1
             // 
@@ -140,15 +107,35 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Stitch";
             // 
+            // lstSuccess2
+            // 
+            this.lstSuccess2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstSuccess2.FormattingEnabled = true;
+            this.lstSuccess2.Location = new System.Drawing.Point(34, 129);
+            this.lstSuccess2.Name = "lstSuccess2";
+            this.lstSuccess2.Size = new System.Drawing.Size(260, 404);
+            this.lstSuccess2.TabIndex = 8;
+            this.lstSuccess2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LstSucceed_DoubleClick);
+            // 
+            // lstFailed2
+            // 
+            this.lstFailed2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstFailed2.FormattingEnabled = true;
+            this.lstFailed2.Location = new System.Drawing.Point(337, 129);
+            this.lstFailed2.Name = "lstFailed2";
+            this.lstFailed2.Size = new System.Drawing.Size(260, 400);
+            this.lstFailed2.TabIndex = 9;
+            this.lstFailed2.DoubleClick += new System.EventHandler(this.LstFailed_DoubleClick);
+            // 
             // Report
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(636, 553);
+            this.Controls.Add(this.lstFailed2);
+            this.Controls.Add(this.lstSuccess2);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.lstDrop);
-            this.Controls.Add(this.lstSucceed);
             this.Controls.Add(this.lblfail);
             this.Controls.Add(this.lblsuccess);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -170,11 +157,11 @@
         #endregion
         private System.Windows.Forms.Label lblsuccess;
         private System.Windows.Forms.Label lblfail;
-        private System.Windows.Forms.ListView lstSucceed;
-        private System.Windows.Forms.ListView lstDrop;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckedListBox lstSuccess2;
+        private System.Windows.Forms.CheckedListBox lstFailed2;
     }
 }
