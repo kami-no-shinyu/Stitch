@@ -14,20 +14,21 @@ namespace Stitch2
         List<string> RMD_FILES = new List<string>();
         public Dictionary<string, string> KnownPaths = new Dictionary<string, string>();
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
+            LoadSettings();
             CenterToScreen();
-
             DependencyHelper.CheckDependencies(Data.dependencies);
 
-            // Check once-more if dependency paths are set in case the
-            // user cancelled something during path-setting. In that case..
             if (!DependencyHelper.DependenciesSet(Data.dependencies))
             {
-                MessageBox.Show("Dependencies have not been set","Dependencies not set",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 Close();
             }
+        }
+
+        private void LoadSettings()
+        {
+            this.chkReplacePaths.Checked = Properties.Settings.Default.replace;
         }
 
         public Form1() { InitializeComponent(); }
@@ -51,7 +52,7 @@ namespace Stitch2
                 }
             }
 
-            // Change ui once stuff changes
+            // Change ui once stuff changes: Show RMD count
             folder_icon.Visible = false;
             lblCount.Text = RMD_FILES.Count.ToString();
             lblCount.Visible = true;
@@ -84,7 +85,7 @@ namespace Stitch2
             CenterLabel(lblCount);
         }
 
-     
+
         // TOOLS SECTION
 
         /// <summary>
@@ -117,10 +118,10 @@ namespace Stitch2
         }
 
         /// <summary>
-        /// Handles the whole process of replacing paths in the rmd file with desired paths
+        /// Handles the whole process of replacing paths in the rmd file with desired paths. Returns True if it worked. Returns False if user cancel's operation.
         /// </summary>
         /// <param name="rmds"></param>
-        private void ReplacePaths(List<string> rmds)
+        private bool ReplacePaths(List<string> rmds)
         {
             foreach (string rmd in rmds)
             {
@@ -146,16 +147,25 @@ namespace Stitch2
                         }
 
 
-                        if (!KnownPaths.ContainsKey(rmd_name))
+                        if (!KnownPaths.ContainsKey(rmd_name.ToLower()))
                         {
-                            KeepAskingForFile(rmd_name);
+                            //Keep asking for file but if the user cancels close everything
+                            if (KeepAskingForFile(rmd_name) == Data.EXIT_CODE)
+                            {
+                                goto Close;
+                            }
                         }
 
-                        str = str.Replace(old_path, KnownPaths[rmd_name].Replace(@"\", @"/"));
+                        str = str.Replace(old_path, KnownPaths[rmd_name.ToLower()].Replace(@"\", @"/"));
                     }
                 }
                 File.WriteAllText(rmd, str);
             }
+
+            return true;
+
+            Close:
+            return false;
         }
 
         /// <summary>
@@ -165,29 +175,30 @@ namespace Stitch2
         /// <returns></returns>
         private string KeepAskingForFile(string filename)
         {
-            openFile.FileName = filename;
             string ext = Path.GetExtension(filename);
+            openFile.FileName = filename;
             openFile.Filter = " " + ext + " file (*" + ext + ")|*" + ext;
 
 
             if (openFile.ShowDialog() == DialogResult.OK)
             {
-                if (openFile.SafeFileName == filename)
+                if (openFile.SafeFileName.ToLower() == filename.ToLower())
                 {
-                    KnownPaths[filename] = openFile.FileName;
-                    return KnownPaths[filename];
+                    KnownPaths[filename.ToLower()] = openFile.FileName.ToLower();
+                    return KnownPaths[filename.ToLower()];
                 }
                 else
                 {
-                    MessageBox.Show("You've selected the wrong file\n Please look for [" + filename + "]", "Wrong Replacement", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return KeepAskingForFile(filename);
+                    DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_WRONG_FILE + filename + " ]", Data.Warnings.SELECTED_WRONG_FILE_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                    if (result == DialogResult.Cancel) return Data.EXIT_CODE;
+                    else return KeepAskingForFile(filename);
                 }
-
             }
             else
             {
-                MessageBox.Show("You haven't selected a replacement", "Missing Replacement", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return KeepAskingForFile(filename);
+                DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_NOTHING, Data.Warnings.SELECTED_NOTHING_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                if (result == DialogResult.Cancel) return Data.EXIT_CODE;
+                else return KeepAskingForFile(filename);
             }
         }
 
@@ -198,21 +209,27 @@ namespace Stitch2
         /// <param name="e"></param>
         private void Stitch_button_Click(object sender, EventArgs e)
         {
+            List<RMD> main = null;
             if (RMD_FILES.Count == 0) { MessageBox.Show(Data.NO_RMD_FILES, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             else
-            {
+
                 if (chkReplacePaths.Checked)
+            {
+                if (ReplacePaths(RMD_FILES) == false)
                 {
-                    ReplacePaths(RMD_FILES);
-                }
+                    return;
+                };
+            }
 
-                // Save the paths of RMDs to text file 
-                String desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                String fileName = desktop_path + "\\" + new DateTime().ToString("yyyyMMddHHmmssffff") + ".txt";
-                TextWriter tw = new StreamWriter(fileName);
-                foreach (String s in RMD_FILES) { tw.WriteLine(s.Replace("\\", @"/")); }
-                tw.Close();
+            // Save the paths of RMDs to text file 
+            String desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            String fileName = desktop_path + "\\" + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".txt";
+            TextWriter tw = new StreamWriter(fileName);
+            foreach (String s in RMD_FILES) { tw.WriteLine(s.Replace("\\", @"/")); }
+            tw.Close();
 
+            try
+            {
                 // Run the stitcher ppwershell on the text file
                 Process p = new Process();
                 p.StartInfo.FileName = "powershell";
@@ -220,8 +237,9 @@ namespace Stitch2
                 p.Start();
                 p.WaitForExit();
 
+
                 // Get the response from the resultant text file
-                List<RMD> main = new List<RMD>();
+                main = new List<RMD>();
 
                 IEnumerable<string> lines = File.ReadLines(fileName + "-fail.txt");
                 foreach (string line in lines) main.Add(new RMD(line));
@@ -249,7 +267,27 @@ namespace Stitch2
                 report.Show();
 
                 Hide();
+
             }
+            catch (Exception)
+            {
+                if (File.Exists(fileName)) File.Delete(fileName);
+                if (File.Exists(fileName + "-fail.txt")) File.Delete(fileName + "-fail.txt");
+                if (File.Exists(fileName + "-succeed.txt")) File.Delete(fileName + "-succeed.txt");
+                MessageBox.Show("An Error Occurred During the Stitching", "Ooops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.replace = this.chkReplacePaths.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            Replacer r = new Replacer();
+            r.ShowDialog();
         }
     }
 }

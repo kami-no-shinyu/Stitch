@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Stitch" Language="1033" Version="1.0.0.0" Manufacturer="kwesicoder" UpgradeCode="f094bb72-5a84-4879-b32c-2cc6751d6ad2">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate  EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="Stitch" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcutDesktop"/>      
+		</Feature>
+
+    <Icon Id="icon.ico" SourceFile="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Dev\Stitch2\stitch_logo2.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+    <UI>
+      <UIRef Id="WixUI_Minimal"/>
+
+      <Publish Dialog="ExitDialog"
+        Control="Finish"
+        Event="DoAction"
+        Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+    <Property
+Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX"
+Value="1" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Stitch" />
+
+    <Property Id="WixShellExecTarget" Value="[#stitch.exe]" />
+    <CustomAction Id="LaunchApplication"
+        BinaryKey="WixCA"
+        DllEntry="WixShellExec"
+        Impersonate="yes" />
+    
+  </Product>
+
+	<Fragment>
+   
+    
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Component Id="ApplicationShortcutDesktop" Guid="*">
+          <Shortcut Id="ApplicationDesktopShortcut"
+              Name="Stitch"
+              Description="Auto R Knitter"
+              Target="[#stitch.exe]"
+              WorkingDirectory="INSTALLFOLDER"/>
+          <RemoveFolder Id="DesktopFolder" On="uninstall"/>
+          <RegistryValue
+              Root="HKCU"
+              Key="Software/MyAppName"
+              Name="installed"
+              Type="integer"
+              Value="1"
+              KeyPath="yes"/>
+        </Component>
+      </Directory>
+      
+      <Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Stitch" />
+			</Directory>
+      
+		</Directory>
+    
+	</Fragment>
+
+	<Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="ProductComponent">
+        <File Id="stitch.exe" Source="$(var.Stitch2.TargetPath)"/>
+      </Component>
+      <Component Id="Patho.exe">
+        <File Id="Patho.exe" Source="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Dev\Stitch2\bin\Debug\Patho.exe"/>
+      </Component>
+      <Component Id="stitcher.ps1">
+        <File Id="stitcher.ps1" Source="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Dev\Stitch2\bin\Debug\stitcher.ps1"/>
+      </Component>
+      
+    </ComponentGroup>
+	</Fragment>
+</Wix>

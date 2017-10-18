@@ -44,6 +44,7 @@
             this.btnClearList = new System.Windows.Forms.PictureBox();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.chkReplacePaths = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -229,6 +230,20 @@
             this.chkReplacePaths.Text = "Replace Paths";
             this.chkReplacePaths.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(144)))), ((int)(((byte)(225)))));
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Location = new System.Drawing.Point(358, 300);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(101, 34);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Replace";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -241,6 +256,7 @@
             this.Controls.Add(this.pnlFolder);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.stitch_button);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -250,6 +266,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Stitch";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
@@ -283,6 +300,7 @@
         private System.Windows.Forms.PictureBox btnClearList;
         private System.Windows.Forms.OpenFileDialog openFile;
         private System.Windows.Forms.CheckBox chkReplacePaths;
+        private System.Windows.Forms.Button button1;
     }
 }
 

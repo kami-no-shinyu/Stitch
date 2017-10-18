@@ -45,7 +45,7 @@ namespace Stitch2
             }
         }
         
-        //Checks if [pathsToCheck] are in the Environment path. Returns True or False
+        //Deprecated!: Checks if [pathsToCheck] are in the Environment path. Returns True or False
         public static bool DependenciesSet(string[] pathsToCheck)
         {
             bool result = true;
