@@ -14,7 +14,11 @@ namespace Stitch2
     public partial class Report : Form
     {
         private Form parent;
-        public Report(){InitializeComponent();}
+        private Form nextForm;
+        public Report(Form nextForm){
+            this.nextForm = nextForm;
+            InitializeComponent();
+        }
 
         // Dictionary containing the raw name of book to its path
         public Dictionary<String, RMD> book = new Dictionary<string, RMD>();
@@ -52,7 +56,7 @@ namespace Stitch2
         
         private void Report_FormClosing(object sender, FormClosingEventArgs e)
         {
-            parent.Show();
+            nextForm.Show();
             //Application.Exit();
         }
 
@@ -62,7 +66,7 @@ namespace Stitch2
         }
         private void Report_Load(object sender, EventArgs e)
         {
-
+            CenterToScreen();
         }
 
         private void LstSucceed_DoubleClick(object sender, MouseEventArgs e)
