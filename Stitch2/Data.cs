@@ -24,5 +24,7 @@ namespace Stitch
         public static String ONLY_ONE_RMD = "I'm sorry, can't work with just single files atm :(";
         public static String DROP_HERE = "Drop Files / Folders Here";
         public static String EXIT_CODE = "0000";
+
+        public static string ERROR_DURING_STITCHING = "An Error Occurred During the Stitching";
      }
 }
