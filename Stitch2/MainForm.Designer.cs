@@ -77,7 +77,7 @@
             this.stitch_button.TabIndex = 2;
             this.stitch_button.Text = "Stitch";
             this.stitch_button.UseVisualStyleBackColor = false;
-            this.stitch_button.Click += new System.EventHandler(this.Stitch_button_Click);
+            this.stitch_button.Click += new System.EventHandler(this.Stitch);
             // 
             // logoBox
             // 
