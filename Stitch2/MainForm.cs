@@ -11,14 +11,16 @@ namespace Stitch
     public partial class MainForm : Form
     {
         List<string> RMD_FILES = new List<string>();
+        List<RMD> rmds = new List<RMD>();
+
         public Dictionary<string, string> KnownPaths = new Dictionary<string, string>();
 
         public MainForm() { InitializeComponent(); }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            LoadSettings();
             CenterToScreen();
+            LoadSettings();
             LoadDependencies();
         }
 
@@ -42,88 +44,140 @@ namespace Stitch
         {
             string[] drag_content = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            // [dragged] is either a collection of files or directories
             foreach (string draggged in drag_content)
             {
-                foreach (string file in GetFiles(draggged, Data.RMD_EXTENSIONS))
+                foreach (string file in FileHandler.GetFiles(draggged, Data.RMD_EXTENSIONS))
                 {
                     if (!RMD_FILES.Contains(file))
                     {
                         RMD_FILES.Add(file);
+
+                        RMD temp_RMD = new RMD(file);
+                        rmds.Add(temp_RMD);
                     }
                 }
             }
 
+            TestRMDS();
             // Change ui once stuff changes: Show RMD count
             ShowItemsDroppedUI();
         }
 
         #region UI Functions
-                private void ShowItemsDroppedUI()
-                {
-                    folder_icon.Visible = false;
-                    lblCount.Visible = true;
+        private void ShowItemsDroppedUI()
+        {
+            folder_icon.Visible = false;
+            lblCount.Visible = true;
 
-                    lblCount.Text = RMD_FILES.Count.ToString();
-                    lblDrop.Text = Data.RMD_FILES_DROPPED;
+            lblCount.Text = RMD_FILES.Count.ToString();
+            lblDrop.Text = Data.RMD_FILES_DROPPED;
 
-                    CenterControl(lblCount);
-                }
-     
-                private void ShowItemsClearedUI()
-                {
-                    folder_icon.Visible = true;
-                    lblCount.Visible = false;
+            CenterControl(lblCount);
+        }
 
-                    lblDrop.Text = Data.DROP_HERE;
+        private void ShowItemsClearedUI()
+        {
+            folder_icon.Visible = true;
+            lblCount.Visible = false;
 
-                    RMD_FILES.Clear();
-                    KnownPaths.Clear();
-           
-                    CenterControl(lblCount);
-                }
+            lblDrop.Text = Data.DROP_HERE;
 
-                private void CenterControl(Control theControl)
-                {
-                    int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
-                    theControl.Location = new Point(x2, theControl.Location.Y);
-                }
+            RMD_FILES.Clear();
+            KnownPaths.Clear();
+            rmds.Clear();
+
+            CenterControl(lblCount);
+        }
+
+        private void CenterControl(Control theControl)
+        {
+            int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
+            theControl.Location = new Point(x2, theControl.Location.Y);
+        }
         #endregion
 
-       
         public void ClearList(object sender, EventArgs e)
         {
             ShowItemsClearedUI();
         }
 
+        public void TestRMDS()
+        {
+            //foreach(RMD r in rmds)
+            //{
+            //    foreach(string key in r.GetSources().Keys)
+            //    {
+            //        MessageBox.Show(key);
+            //        r.SetSource(key, @"main\store.RData");
+            //    }
+            //}
+
+            ReplacePaths3(rmds);
+        }
+
+
 
         /// <summary>
-        /// Checks folder for files with extension in extension list
+        /// Asks for location of file with name [filename] and adds the new location to knownpaths dictionary
         /// </summary>
-        /// <param name="dir"> The directory to search within </param>
-        /// <param name="extensions"> The extensions to look out for</param>
-        /// <returns>Returns a list of paths of files with extensions in [extensions]</returns>
-        private List<String> GetFiles(String dir, List<string> extensions)
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private string KeepAskingForSource(string source)
         {
-            List<String> results = new List<string>();
+            string ext = Path.GetExtension(source);
+            openFile.FileName = source;
+            openFile.Filter = " " + ext + " file (*" + ext + ")|*" + ext;
 
-            if (File.GetAttributes(dir).HasFlag(FileAttributes.Directory))
+
+            if (openFile.ShowDialog() == DialogResult.OK)
             {
-                List<string> rmd_files = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
-                    .Where(file => extensions
-                    .Contains(Path.GetExtension(file)))
-                    .ToList();
-                results.AddRange(rmd_files);
-            }
-            else // if its a file
-            {
-                if (extensions.Contains(Path.GetExtension(dir).ToLower()))
+                if (openFile.SafeFileName.ToLower() == source.ToLower())
                 {
-                    results.Add(dir);
+                    return openFile.FileName;
+                }
+                else
+                {
+                    DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_WRONG_FILE + source + " ]", Data.Warnings.SELECTED_WRONG_FILE_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                    if (result == DialogResult.Cancel) return Data.EXIT_CODE;
+                    else return KeepAskingForSource(source);
                 }
             }
+            else
+            {
+                DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_NOTHING, Data.Warnings.SELECTED_NOTHING_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                if (result == DialogResult.Cancel) return Data.EXIT_CODE;
+                else return KeepAskingForSource(source);
+            }
+        }
 
-            return results;
+        private void ReplacePaths3(List<RMD> rmds)
+        {
+            Dictionary<string, string> KnownSources = new Dictionary<string, string>();
+
+            foreach (RMD rmd in rmds)
+            {
+                foreach (string source in rmd.GetSources().Keys)
+                {
+                    string source_lower = source.ToLower();
+                    if (KnownSources.ContainsKey(source_lower))
+                    {
+                        rmd.SetSource(source, KnownSources[source_lower]);
+                    }
+                    else
+                    {
+                        string new_source = KeepAskingForSource(source).Replace(@"\", @"/");
+                        if (new_source == Data.EXIT_CODE)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            KnownSources[source_lower] = new_source;
+                            rmd.SetSource(source, new_source);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -159,7 +213,7 @@ namespace Stitch
                         if (!KnownPaths.ContainsKey(rmd_name.ToLower()))
                         {
                             //Keep asking for file but if the user cancels close everything
-                            if (KeepAskingForFile(rmd_name) == Data.EXIT_CODE)
+                            if (KeepAskingForSource(rmd_name) == Data.EXIT_CODE)
                             {
                                 goto Close;
                             }
@@ -233,40 +287,7 @@ namespace Stitch
 
             }
         }
-        
-        /// <summary>
-        /// Asks for location of file with name [filename] and adds the new location to knownpaths dictionary
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        private string KeepAskingForFile(string filename)
-        {
-            string ext = Path.GetExtension(filename);
-            openFile.FileName = filename;
-            openFile.Filter = " " + ext + " file (*" + ext + ")|*" + ext;
 
-
-            if (openFile.ShowDialog() == DialogResult.OK)
-            {
-                if (openFile.SafeFileName.ToLower() == filename.ToLower())
-                {
-                    KnownPaths[filename.ToLower()] = openFile.FileName.ToLower();
-                    return KnownPaths[filename.ToLower()];
-                }
-                else
-                {
-                    DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_WRONG_FILE + filename + " ]", Data.Warnings.SELECTED_WRONG_FILE_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-                    if (result == DialogResult.Cancel) return Data.EXIT_CODE;
-                    else return KeepAskingForFile(filename);
-                }
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_NOTHING, Data.Warnings.SELECTED_NOTHING_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-                if (result == DialogResult.Cancel) return Data.EXIT_CODE;
-                else return KeepAskingForFile(filename);
-            }
-        }
 
         /// <summary>
         /// The MAIN Stitching Part
@@ -275,8 +296,12 @@ namespace Stitch
         /// <param name="e"></param>
         private void Stitch_button_Click(object sender, EventArgs e)
         {
-            if (RMD_FILES.Count == 0) { MessageBox.Show(Data.NO_RMD_FILES, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
-            else {
+            if (rmds.Count == 0)
+            {
+                MessageBox.Show(Data.NO_RMD_FILES, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
 
                 if (chkReplacePaths.Checked)
                 {

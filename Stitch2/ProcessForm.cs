@@ -25,10 +25,9 @@ namespace Stitch
             parent.Hide();
             Size = parent.Size;
             Location = parent.Location;
-            CenterControl(prog);
-            CenterControl(label1);
-            CenterControl(lblCount);
-            CenterControl(label2);
+            
+            foreach(Control c in Controls){ CenterControl(c);}
+            
             Init();  
         }
 
