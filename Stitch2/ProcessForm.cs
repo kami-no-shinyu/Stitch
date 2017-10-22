@@ -9,10 +9,10 @@ namespace Stitch
     public partial class ProcessForm : Form
     {
         public PathList path_list;
-        public Form1 parent;
+        public MainForm parent;
         public List<string> rmds;
 
-        public ProcessForm(PathList path_list,Form1 parent,List<string> rmds)
+        public ProcessForm(PathList path_list,MainForm parent,List<string> rmds)
         {
             this.path_list = path_list;
             this.parent = parent;
@@ -45,7 +45,7 @@ namespace Stitch
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.ErrorDialog = false;
-                p.StartInfo.CreateNoWindow = false;
+                p.StartInfo.CreateNoWindow = true;
                 p.EnableRaisingEvents = true;
                 p.Start();
 
@@ -136,7 +136,7 @@ namespace Stitch
 
         private void ShowReport(List<RMD> main)
         {
-            parent.BtnClearList_Click(null, null);
+            parent.ClearList(null, null);
             //Send Data to the other form
             DialogResult = DialogResult.OK;
             Close();            

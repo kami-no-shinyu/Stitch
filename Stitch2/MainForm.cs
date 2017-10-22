@@ -1,24 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace Stitch
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         List<string> RMD_FILES = new List<string>();
         public Dictionary<string, string> KnownPaths = new Dictionary<string, string>();
+
+        public MainForm() { InitializeComponent(); }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadSettings();
             CenterToScreen();
+            LoadDependencies();
+        }
+
+        private void LoadSettings()
+        {
+            chkReplacePaths.Checked = Properties.Settings.Default.replace;
+            txtVersion.Text = 'v' + Properties.Settings.Default.version;
+        }
+        private void LoadDependencies()
+        {
             DependencyHelper.CheckDependencies(Data.dependencies);
 
             if (!DependencyHelper.DependenciesSet(Data.dependencies))
@@ -27,16 +37,6 @@ namespace Stitch
             }
         }
 
-        private void LoadSettings()
-        {
-            chkReplacePaths.Checked = Properties.Settings.Default.replace;
-            txtVersion.Text = 'v' + Properties.Settings.Default.version;
-        }
-
-        public Form1() { InitializeComponent(); }
-
-
-        //UI SECTION
         private void LstDrop_DragEnter(object sender, DragEventArgs e) { if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy; }
         private void LstDrop_DragDrop(object sender, DragEventArgs e)
         {
@@ -55,40 +55,47 @@ namespace Stitch
             }
 
             // Change ui once stuff changes: Show RMD count
-            folder_icon.Visible = false;
-            lblCount.Text = RMD_FILES.Count.ToString();
-            lblCount.Visible = true;
-            CenterLabel(lblCount);
-            lblDrop.Text = Data.RMD_FILES_DROPPED;
+            ShowItemsDroppedUI();
         }
 
-        /// <summary>
-        /// Centers a label within its parent
-        /// </summary>
-        /// <param name="theLabel"></param>
-        private void CenterLabel(Label theLabel)
+        #region UI Functions
+                private void ShowItemsDroppedUI()
+                {
+                    folder_icon.Visible = false;
+                    lblCount.Visible = true;
+
+                    lblCount.Text = RMD_FILES.Count.ToString();
+                    lblDrop.Text = Data.RMD_FILES_DROPPED;
+
+                    CenterControl(lblCount);
+                }
+     
+                private void ShowItemsClearedUI()
+                {
+                    folder_icon.Visible = true;
+                    lblCount.Visible = false;
+
+                    lblDrop.Text = Data.DROP_HERE;
+
+                    RMD_FILES.Clear();
+                    KnownPaths.Clear();
+           
+                    CenterControl(lblCount);
+                }
+
+                private void CenterControl(Control theControl)
+                {
+                    int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
+                    theControl.Location = new Point(x2, theControl.Location.Y);
+                }
+        #endregion
+
+       
+        public void ClearList(object sender, EventArgs e)
         {
-            int x2 = (theLabel.Parent.Size.Width - theLabel.Size.Width) / 2;
-            theLabel.Location = new Point(x2, theLabel.Location.Y);
+            ShowItemsClearedUI();
         }
 
-        /// <summary>
-        /// Clears the rmd files list
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void BtnClearList_Click(object sender, EventArgs e)
-        {
-            RMD_FILES.Clear();
-            KnownPaths.Clear();
-            lblDrop.Text = Data.DROP_HERE;
-            folder_icon.Visible = true;
-            lblCount.Visible = false;
-            CenterLabel(lblCount);
-        }
-
-
-        // TOOLS SECTION
 
         /// <summary>
         /// Checks folder for files with extension in extension list
@@ -226,6 +233,7 @@ namespace Stitch
 
             }
         }
+        
         /// <summary>
         /// Asks for location of file with name [filename] and adds the new location to knownpaths dictionary
         /// </summary>
@@ -260,10 +268,6 @@ namespace Stitch
             }
         }
 
-
-
-        public string fileName = "";
-        public int count = 0;
         /// <summary>
         /// The MAIN Stitching Part
         /// </summary>
@@ -272,18 +276,13 @@ namespace Stitch
         private void Stitch_button_Click(object sender, EventArgs e)
         {
             if (RMD_FILES.Count == 0) { MessageBox.Show(Data.NO_RMD_FILES, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
-            else
-            {
+            else {
 
                 if (chkReplacePaths.Checked)
                 {
-                    if (ReplacePaths(RMD_FILES) == false)
-                    {
-                        return;
-                    };
+                    if (ReplacePaths(RMD_FILES) == false) return;
                 }
 
-                //Create TaskList of the paths 
                 PathList t = new PathList(RMD_FILES);
 
                 ProcessForm p = new ProcessForm(t, this, RMD_FILES);
@@ -291,21 +290,9 @@ namespace Stitch
             }
         }
 
-
-        private void ShowReport(List<RMD> main)
+        private void OnClose(object sender, FormClosingEventArgs e)
         {
-            BtnClearList_Click(null, null);
-            //Send Data to the other form
-            ReportForm report = new ReportForm(this);
-            report.SetParentForm(this);
-            report.SetRMDFiles(main);
-            report.Show();
-            Hide();
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Properties.Settings.Default.replace = this.chkReplacePaths.Checked;
+            Properties.Settings.Default.replace = chkReplacePaths.Checked;
             Properties.Settings.Default.Save();
         }
     }
