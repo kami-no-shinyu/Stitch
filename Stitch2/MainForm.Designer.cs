@@ -37,7 +37,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblDrop = new System.Windows.Forms.Label();
             this.folder_icon = new System.Windows.Forms.PictureBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.txtVersion = new System.Windows.Forms.Label();
             this.pnlFolder = new System.Windows.Forms.Panel();
             this.lblCount = new System.Windows.Forms.Label();
             this.dependencyFolderLocator = new System.Windows.Forms.FolderBrowserDialog();
@@ -67,6 +67,7 @@
             // stitch_button
             // 
             this.stitch_button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(144)))), ((int)(((byte)(225)))));
+            this.stitch_button.FlatAppearance.BorderSize = 0;
             this.stitch_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stitch_button.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stitch_button.ForeColor = System.Drawing.Color.White;
@@ -153,17 +154,18 @@
             this.folder_icon.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             this.folder_icon.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
             // 
-            // label4
+            // txtVersion
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.DarkGray;
-            this.label4.Location = new System.Drawing.Point(413, 394);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 19);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "v2.1";
+            this.txtVersion.AutoSize = true;
+            this.txtVersion.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtVersion.ForeColor = System.Drawing.Color.DarkGray;
+            this.txtVersion.Location = new System.Drawing.Point(382, 395);
+            this.txtVersion.Margin = new System.Windows.Forms.Padding(10);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.Size = new System.Drawing.Size(35, 19);
+            this.txtVersion.TabIndex = 10;
+            this.txtVersion.Text = "v2.1";
+            this.txtVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pnlFolder
             // 
@@ -239,7 +241,7 @@
             this.Controls.Add(this.chkReplacePaths);
             this.Controls.Add(this.btnClearList);
             this.Controls.Add(this.pnlFolder);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtVersion);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.stitch_button);
             this.Controls.Add(this.panel1);
@@ -276,7 +278,7 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lblDrop;
         private System.Windows.Forms.PictureBox folder_icon;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label txtVersion;
         private System.Windows.Forms.Panel pnlFolder;
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.FolderBrowserDialog dependencyFolderLocator;

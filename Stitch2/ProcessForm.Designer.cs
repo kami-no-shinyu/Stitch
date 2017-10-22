@@ -1,6 +1,6 @@
 ﻿namespace Stitch
 {
-    partial class Pending
+    partial class ProcessForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Pending));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProcessForm));
             this.label1 = new System.Windows.Forms.Label();
             this.prog = new Stitch.ProgressBarCustom();
             this.lblCount = new System.Windows.Forms.Label();

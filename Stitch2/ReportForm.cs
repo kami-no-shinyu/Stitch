@@ -11,11 +11,11 @@ using System.Windows.Forms;
 
 namespace Stitch
 {
-    public partial class Report : Form
+    public partial class ReportForm : Form
     {
         private Form parent;
         private Form nextForm;
-        public Report(Form nextForm){
+        public ReportForm(Form nextForm){
             this.nextForm = nextForm;
             InitializeComponent();
         }

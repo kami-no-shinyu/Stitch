@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2FC1A1E8-33EE-4728-9BC7-79CAC3766979}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Stitch1</RootNamespace>
+    <RootNamespace>Stitch</RootNamespace>
     <AssemblyName>Stitch</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,42 +58,42 @@
   <ItemGroup>
     <Compile Include="Data.cs" />
     <Compile Include="DependencyHelper.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Pending.cs">
+    <Compile Include="ProcessForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Pending.Designer.cs">
-      <DependentUpon>Pending.cs</DependentUpon>
+    <Compile Include="ProcessForm.Designer.cs">
+      <DependentUpon>ProcessForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProgressBarCustom.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Replacer.cs">
+    <Compile Include="ReplaceDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Replacer.Designer.cs">
-      <DependentUpon>Replacer.cs</DependentUpon>
+    <Compile Include="ReplaceDialog.Designer.cs">
+      <DependentUpon>ReplaceDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Report.cs">
+    <Compile Include="ReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Report.Designer.cs">
-      <DependentUpon>Report.cs</DependentUpon>
+    <Compile Include="ReportForm.Designer.cs">
+      <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RMD.cs" />
-    <Compile Include="TaskList.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="PathList.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Pending.resx">
-      <DependentUpon>Pending.cs</DependentUpon>
+    <EmbeddedResource Include="ProcessForm.resx">
+      <DependentUpon>ProcessForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -105,11 +105,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Replacer.resx">
-      <DependentUpon>Replacer.cs</DependentUpon>
+    <EmbeddedResource Include="ReplaceDialog.resx">
+      <DependentUpon>ReplaceDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Report.resx">
-      <DependentUpon>Report.cs</DependentUpon>
+    <EmbeddedResource Include="ReportForm.resx">
+      <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">

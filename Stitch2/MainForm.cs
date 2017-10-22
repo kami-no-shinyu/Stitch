@@ -29,7 +29,8 @@ namespace Stitch
 
         private void LoadSettings()
         {
-            this.chkReplacePaths.Checked = Properties.Settings.Default.replace;
+            chkReplacePaths.Checked = Properties.Settings.Default.replace;
+            txtVersion.Text = 'v' + Properties.Settings.Default.version;
         }
 
         public Form1() { InitializeComponent(); }
@@ -172,7 +173,7 @@ namespace Stitch
         public Dictionary<string, string> KNOWN = new Dictionary<string, string>();
         private bool ReplacePaths2(List<string> RMD)
         {
-            using (var form = new Replacer())
+            using (var form = new ReplaceDialog())
             {
                 form.RMDs = RMD;
                 var result = form.ShowDialog();
@@ -280,74 +281,32 @@ namespace Stitch
                     {
                         return;
                     };
-                    //if (ReplacePaths2(RMD_FILES) == false)
-                    //{
-                    //    return;
-                    //};
-
                 }
 
-                // Save the paths of RMDs to text file 
-                String desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                fileName = desktop_path + "\\" + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".txt";
-                TextWriter tw = new StreamWriter(fileName);
-                foreach (String s in RMD_FILES) { tw.WriteLine(s.Replace("\\", @"/")); }
-                tw.Close();
+                //Create TaskList of the paths 
+                PathList t = new PathList(RMD_FILES);
 
-                Pending p = new Pending(fileName, this,RMD_FILES);
+                ProcessForm p = new ProcessForm(t, this, RMD_FILES);
                 p.ShowDialog();
             }
         }
 
-        private void P_Exited(object sender, EventArgs e)
-        {
-            List<RMD> main = null;
-
-            // Get the response from the resultant text file
-            main = new List<RMD>();
-
-            IEnumerable<string> lines = File.ReadLines(fileName + "-fail.txt");
-            foreach (string line in lines) main.Add(new RMD(line));
-            IEnumerable<string> lines2 = File.ReadLines(fileName + "-succeed.txt");
-            foreach (string line in lines2) main.Add(new RMD(line).SetPass());
-
-            // Delete the files produced
-            try
-            {
-                if (File.Exists(fileName)) File.Delete(fileName);
-                if (File.Exists(fileName + "-fail.txt")) File.Delete(fileName + "-fail.txt");
-                if (File.Exists(fileName + "-succeed.txt")) File.Delete(fileName + "-succeed.txt");
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            this.Invoke((Action)(() =>
-            {
-                ShowReport(main);
-            }));
-        }
 
         private void ShowReport(List<RMD> main)
         {
             BtnClearList_Click(null, null);
             //Send Data to the other form
-            Report report = new Report(this);
+            ReportForm report = new ReportForm(this);
             report.SetParentForm(this);
             report.SetRMDFiles(main);
             report.Show();
             Hide();
         }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.replace = this.chkReplacePaths.Checked;
             Properties.Settings.Default.Save();
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            Replacer r = new Replacer();
-            r.ShowDialog();
         }
     }
 }

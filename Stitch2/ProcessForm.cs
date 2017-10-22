@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Stitch
 {
-    public partial class Pending : Form
+    public partial class ProcessForm : Form
     {
-        public string storage;
+        public PathList path_list;
         public Form1 parent;
         public List<string> rmds;
 
-        public Pending(string filename,Form1 parent,List<string> rmds)
+        public ProcessForm(PathList path_list,Form1 parent,List<string> rmds)
         {
-            this.storage = filename;
+            this.path_list = path_list;
             this.parent = parent;
             this.rmds = rmds;
             InitializeComponent();
@@ -28,12 +22,12 @@ namespace Stitch
 
         private void Pending_Load(object sender, EventArgs e)
         {
-            this.parent.Hide();
-            this.Size = this.parent.Size;
-            this.Location = this.parent.Location;
-            this.CenterControl(prog);
-            this.CenterControl(label1);
-            this.CenterControl(lblCount);
+            parent.Hide();
+            Size = parent.Size;
+            Location = parent.Location;
+            CenterControl(prog);
+            CenterControl(label1);
+            CenterControl(lblCount);
             CenterControl(label2);
             Init();  
         }
@@ -46,12 +40,12 @@ namespace Stitch
                 // Run the stitcher ppwershell on the text file
                 Process p = new Process();
                 p.StartInfo.FileName = @"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe";
-                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + this.storage;
+                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + path_list.path_of_file;
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.ErrorDialog = false;
-                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.CreateNoWindow = false;
                 p.EnableRaisingEvents = true;
                 p.Start();
 
@@ -69,7 +63,6 @@ namespace Stitch
 
                             //MessageBox.Show("Count: " + count.ToString() + "RMD Count: " + rmds.Count.ToString() + "Percentage: " + ((count / rmds.Count)).ToString() + " " + outLine.Data);
                             prog.Value = (int)((count / rmds.Count) * 100);
-                            MessageBox.Show(prog.Value.ToString());
                         }
                     }
                 });
@@ -101,8 +94,9 @@ namespace Stitch
 
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                MessageBox.Show(e.StackTrace);
                 MessageBox.Show("An Error Occurred During the Stitching", "Ooops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -114,24 +108,26 @@ namespace Stitch
             // Get the response from the resultant text file
             main = new List<RMD>();
 
-            IEnumerable<string> lines = File.ReadLines(this.storage + "-fail.txt");
-            foreach (string line in lines) main.Add(new RMD(line));
-            IEnumerable<string> lines2 = File.ReadLines(this.storage + "-succeed.txt");
-            foreach (string line in lines2) main.Add(new RMD(line).SetPass());
-
+            foreach(string path in path_list.GetFailTaskList().GetPaths())
+            {
+                main.Add(new RMD(path));
+            }
+            foreach(string path in path_list.GetSuccessTaskList().GetPaths())
+            {
+                main.Add(new RMD(path));
+            }
+            
             // Delete the files produced
             try
             {
-                if (File.Exists(this.storage)) File.Delete(this.storage);
-                if (File.Exists(this.storage + "-fail.txt")) File.Delete(this.storage + "-fail.txt");
-                if (File.Exists(this.storage + "-succeed.txt")) File.Delete(this.storage + "-succeed.txt");
+                path_list.Dispose();
             }
             catch (Exception)
             {
                 throw;
             }
 
-            this.Invoke((Action)(() =>
+            Invoke((Action)(() =>
             {
                 ShowReport(main);
             }));
@@ -140,15 +136,15 @@ namespace Stitch
 
         private void ShowReport(List<RMD> main)
         {
-            this.parent.BtnClearList_Click(null, null);
+            parent.BtnClearList_Click(null, null);
             //Send Data to the other form
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Close();            
         }
 
         private void Pending_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Report report = new Report(this.parent);
+            ReportForm report = new ReportForm(parent);
             report.SetParentForm(this);
             report.SetRMDFiles(main);
             report.Show();

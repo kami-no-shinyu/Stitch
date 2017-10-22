@@ -1,6 +1,6 @@
 ﻿namespace Stitch
 {
-    partial class Report
+    partial class ReportForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Report));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportForm));
             this.lblsuccess = new System.Windows.Forms.Label();
             this.lblfail = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
