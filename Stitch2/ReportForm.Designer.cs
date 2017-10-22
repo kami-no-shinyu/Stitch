@@ -123,11 +123,11 @@
             this.lstFailed2.FormattingEnabled = true;
             this.lstFailed2.Location = new System.Drawing.Point(337, 129);
             this.lstFailed2.Name = "lstFailed2";
-            this.lstFailed2.Size = new System.Drawing.Size(260, 400);
+            this.lstFailed2.Size = new System.Drawing.Size(260, 404);
             this.lstFailed2.TabIndex = 9;
             this.lstFailed2.DoubleClick += new System.EventHandler(this.LstFailed_DoubleClick);
             // 
-            // Report
+            // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -140,7 +140,7 @@
             this.Controls.Add(this.lblsuccess);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Report";
+            this.Name = "ReportForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Report";
             this.TopMost = true;

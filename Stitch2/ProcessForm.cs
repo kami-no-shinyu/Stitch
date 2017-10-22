@@ -114,7 +114,7 @@ namespace Stitch
             }
             foreach(string path in path_list.GetSuccessTaskList().GetPaths())
             {
-                main.Add(new RMD(path));
+                main.Add(new RMD(path).SetPass());
             }
             
             // Delete the files produced

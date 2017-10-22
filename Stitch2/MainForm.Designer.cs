@@ -107,6 +107,7 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.txtVersion);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -157,12 +158,14 @@
             // txtVersion
             // 
             this.txtVersion.AutoSize = true;
+            this.txtVersion.Dock = System.Windows.Forms.DockStyle.Right;
             this.txtVersion.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtVersion.ForeColor = System.Drawing.Color.DarkGray;
-            this.txtVersion.Location = new System.Drawing.Point(382, 395);
+            this.txtVersion.Location = new System.Drawing.Point(395, 0);
             this.txtVersion.Margin = new System.Windows.Forms.Padding(10);
             this.txtVersion.Name = "txtVersion";
-            this.txtVersion.Size = new System.Drawing.Size(35, 19);
+            this.txtVersion.Padding = new System.Windows.Forms.Padding(10);
+            this.txtVersion.Size = new System.Drawing.Size(55, 39);
             this.txtVersion.TabIndex = 10;
             this.txtVersion.Text = "v2.1";
             this.txtVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -241,7 +244,6 @@
             this.Controls.Add(this.chkReplacePaths);
             this.Controls.Add(this.btnClearList);
             this.Controls.Add(this.pnlFolder);
-            this.Controls.Add(this.txtVersion);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.stitch_button);
             this.Controls.Add(this.panel1);

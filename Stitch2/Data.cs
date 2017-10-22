@@ -22,7 +22,7 @@ namespace Stitch
         public static string RMD_FILES_DROPPED = "RMD files dropped";
         public static String NO_RMD_FILES = "No RMD files Selected";
         public static String ONLY_ONE_RMD = "I'm sorry, can't work with just single files atm :(";
-        public static String DROP_HERE = "Drop Files/Folders Here";
+        public static String DROP_HERE = "Drop Files / Folders Here";
         public static String EXIT_CODE = "0000";
      }
 }
