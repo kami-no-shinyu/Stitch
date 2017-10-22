@@ -10,7 +10,7 @@
       <ComponentRef Id="ApplicationShortcutDesktop"/>      
 		</Feature>
 
-    <Icon Id="icon.ico" SourceFile="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Dev\Stitch2\stitch_logo2.ico"/>
+    <Icon Id="icon.ico" SourceFile="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\logo.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
     <UI>
@@ -68,13 +68,13 @@ Value="1" />
 	<Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component Id="ProductComponent">
-        <File Id="stitch.exe" Source="$(var.Stitch2.TargetPath)"/>
+        <File Id="stitch.exe" Source="$(var.Stitch.TargetPath)"/>
       </Component>
       <Component Id="Patho.exe">
-        <File Id="Patho.exe" Source="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Dev\Stitch2\bin\Debug\Patho.exe"/>
+        <File Id="Patho.exe" Source="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Source\Stitch2\bin\Debug\Patho.exe"/>
       </Component>
       <Component Id="stitcher.ps1">
-        <File Id="stitcher.ps1" Source="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Dev\Stitch2\bin\Debug\stitcher.ps1"/>
+        <File Id="stitcher.ps1" Source="C:\Users\kaminoshinyu\Google Drive\Programming\Completed\Stitch\Source\Stitch2\bin\Debug\stitcher.ps1"/>
       </Component>
       
     </ComponentGroup>
