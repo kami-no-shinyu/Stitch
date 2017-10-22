@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Stitch2
+namespace Stitch
 {
     public partial class Report : Form
     {

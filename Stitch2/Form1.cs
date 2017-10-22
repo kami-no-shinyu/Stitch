@@ -8,7 +8,7 @@ using System.Threading;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Stitch2
+namespace Stitch
 {
     public partial class Form1 : Form
     {

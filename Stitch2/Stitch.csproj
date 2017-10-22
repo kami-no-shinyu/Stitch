@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2FC1A1E8-33EE-4728-9BC7-79CAC3766979}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Stitch2</RootNamespace>
-    <AssemblyName>Stitch2</AssemblyName>
+    <RootNamespace>Stitch1</RootNamespace>
+    <AssemblyName>Stitch</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -88,6 +88,7 @@
       <DependentUpon>Report.cs</DependentUpon>
     </Compile>
     <Compile Include="RMD.cs" />
+    <Compile Include="TaskList.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +103,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Replacer.resx">
       <DependentUpon>Replacer.cs</DependentUpon>

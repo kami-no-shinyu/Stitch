@@ -1,4 +1,4 @@
-﻿namespace Stitch2
+﻿namespace Stitch
 {
     partial class Pending
     {
@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Pending));
             this.label1 = new System.Windows.Forms.Label();
-            this.prog = new Stitch2.ProgressBarCustom();
+            this.prog = new Stitch.ProgressBarCustom();
             this.lblCount = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();

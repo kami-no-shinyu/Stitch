@@ -1,4 +1,4 @@
-﻿namespace Stitch2
+﻿namespace Stitch
 {
     partial class Form1
     {
