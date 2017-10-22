@@ -1,6 +1,6 @@
-﻿namespace Stitch2
+﻿namespace Stitch
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,45 +28,46 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label1 = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.progName = new System.Windows.Forms.Label();
             this.stitch_button = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.logoBox = new System.Windows.Forms.PictureBox();
+            this.progTagline = new System.Windows.Forms.Label();
+            this.headerPanel = new System.Windows.Forms.Panel();
+            this.txtVersion = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lblDrop = new System.Windows.Forms.Label();
             this.folder_icon = new System.Windows.Forms.PictureBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.pnlFolder = new System.Windows.Forms.Panel();
             this.lblCount = new System.Windows.Forms.Label();
             this.dependencyFolderLocator = new System.Windows.Forms.FolderBrowserDialog();
             this.btnClearList = new System.Windows.Forms.PictureBox();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.chkReplacePaths = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoBox)).BeginInit();
+            this.headerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.folder_icon)).BeginInit();
             this.pnlFolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnClearList)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // progName
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(144)))), ((int)(((byte)(225)))));
-            this.label1.Location = new System.Drawing.Point(184, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 28);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Stitch";
+            this.progName.AutoSize = true;
+            this.progName.BackColor = System.Drawing.Color.White;
+            this.progName.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(144)))), ((int)(((byte)(225)))));
+            this.progName.Location = new System.Drawing.Point(184, 9);
+            this.progName.Name = "progName";
+            this.progName.Size = new System.Drawing.Size(62, 28);
+            this.progName.TabIndex = 0;
+            this.progName.Text = "Stitch";
             // 
             // stitch_button
             // 
             this.stitch_button.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(144)))), ((int)(((byte)(225)))));
+            this.stitch_button.FlatAppearance.BorderSize = 0;
             this.stitch_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stitch_button.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stitch_button.ForeColor = System.Drawing.Color.White;
@@ -78,39 +79,55 @@
             this.stitch_button.UseVisualStyleBackColor = false;
             this.stitch_button.Click += new System.EventHandler(this.Stitch_button_Click);
             // 
-            // pictureBox1
+            // logoBox
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(8, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
+            this.logoBox.Image = ((System.Drawing.Image)(resources.GetObject("logoBox.Image")));
+            this.logoBox.Location = new System.Drawing.Point(8, 6);
+            this.logoBox.Name = "logoBox";
+            this.logoBox.Size = new System.Drawing.Size(50, 50);
+            this.logoBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.logoBox.TabIndex = 4;
+            this.logoBox.TabStop = false;
             // 
-            // label2
+            // progTagline
             // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.White;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(161, 37);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 19);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Auto Knit R Files";
+            this.progTagline.AutoSize = true;
+            this.progTagline.BackColor = System.Drawing.Color.White;
+            this.progTagline.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progTagline.ForeColor = System.Drawing.Color.Black;
+            this.progTagline.Location = new System.Drawing.Point(161, 37);
+            this.progTagline.Name = "progTagline";
+            this.progTagline.Size = new System.Drawing.Size(109, 19);
+            this.progTagline.TabIndex = 5;
+            this.progTagline.Text = "Auto Knit R Files";
             // 
-            // panel1
+            // headerPanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(450, 62);
-            this.panel1.TabIndex = 6;
+            this.headerPanel.BackColor = System.Drawing.Color.White;
+            this.headerPanel.Controls.Add(this.progTagline);
+            this.headerPanel.Controls.Add(this.logoBox);
+            this.headerPanel.Controls.Add(this.progName);
+            this.headerPanel.Controls.Add(this.txtVersion);
+            this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.headerPanel.Location = new System.Drawing.Point(0, 0);
+            this.headerPanel.Name = "headerPanel";
+            this.headerPanel.Size = new System.Drawing.Size(450, 62);
+            this.headerPanel.TabIndex = 6;
+            // 
+            // txtVersion
+            // 
+            this.txtVersion.AutoSize = true;
+            this.txtVersion.Dock = System.Windows.Forms.DockStyle.Right;
+            this.txtVersion.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtVersion.ForeColor = System.Drawing.Color.DarkGray;
+            this.txtVersion.Location = new System.Drawing.Point(395, 0);
+            this.txtVersion.Margin = new System.Windows.Forms.Padding(10);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.Padding = new System.Windows.Forms.Padding(10);
+            this.txtVersion.Size = new System.Drawing.Size(55, 39);
+            this.txtVersion.TabIndex = 10;
+            this.txtVersion.Text = "v2.1";
+            this.txtVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pictureBox2
             // 
@@ -152,18 +169,6 @@
             this.folder_icon.TabStop = false;
             this.folder_icon.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             this.folder_icon.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.DarkGray;
-            this.label4.Location = new System.Drawing.Point(413, 394);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 19);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "v2.1";
             // 
             // pnlFolder
             // 
@@ -208,7 +213,7 @@
             this.btnClearList.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnClearList.TabIndex = 12;
             this.btnClearList.TabStop = false;
-            this.btnClearList.Click += new System.EventHandler(this.BtnClearList_Click);
+            this.btnClearList.Click += new System.EventHandler(this.ClearList);
             this.btnClearList.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             this.btnClearList.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
             // 
@@ -229,7 +234,7 @@
             this.chkReplacePaths.Text = "Replace Paths";
             this.chkReplacePaths.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // MainForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -239,24 +244,22 @@
             this.Controls.Add(this.chkReplacePaths);
             this.Controls.Add(this.btnClearList);
             this.Controls.Add(this.pnlFolder);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.stitch_button);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.headerPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Stitch";
-            this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClose);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoBox)).EndInit();
+            this.headerPanel.ResumeLayout(false);
+            this.headerPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.folder_icon)).EndInit();
             this.pnlFolder.ResumeLayout(false);
@@ -269,15 +272,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label progName;
         private System.Windows.Forms.Button stitch_button;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.PictureBox logoBox;
+        private System.Windows.Forms.Label progTagline;
+        private System.Windows.Forms.Panel headerPanel;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label lblDrop;
         private System.Windows.Forms.PictureBox folder_icon;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label txtVersion;
         private System.Windows.Forms.Panel pnlFolder;
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.FolderBrowserDialog dependencyFolderLocator;

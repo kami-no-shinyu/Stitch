@@ -1,6 +1,6 @@
-﻿namespace Stitch2
+﻿namespace Stitch
 {
-    partial class Replacer
+    partial class ReplaceDialog
     {
         /// <summary>
         /// Required designer variable.

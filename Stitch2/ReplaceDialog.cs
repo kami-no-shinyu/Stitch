@@ -9,15 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Stitch2
+namespace Stitch
 {
-    public partial class Replacer : Form
+    public partial class ReplaceDialog : Form
     {
         public Dictionary<string, string> KnownPaths = new Dictionary<string, string>();
         public List<string> unknown = new List<string>();
         public List<string> RMDs { get; set; }
 
-        public Replacer()
+        public ReplaceDialog()
         {
             InitializeComponent();
         }

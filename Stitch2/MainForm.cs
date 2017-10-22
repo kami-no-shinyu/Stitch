@@ -1,23 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Stitch2
+namespace Stitch
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         List<string> RMD_FILES = new List<string>();
         public Dictionary<string, string> KnownPaths = new Dictionary<string, string>();
+
+        public MainForm() { InitializeComponent(); }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadSettings();
             CenterToScreen();
+            LoadDependencies();
+        }
+
+        private void LoadSettings()
+        {
+            chkReplacePaths.Checked = Properties.Settings.Default.replace;
+            txtVersion.Text = 'v' + Properties.Settings.Default.version;
+        }
+        private void LoadDependencies()
+        {
             DependencyHelper.CheckDependencies(Data.dependencies);
 
             if (!DependencyHelper.DependenciesSet(Data.dependencies))
@@ -26,15 +37,6 @@ namespace Stitch2
             }
         }
 
-        private void LoadSettings()
-        {
-            this.chkReplacePaths.Checked = Properties.Settings.Default.replace;
-        }
-
-        public Form1() { InitializeComponent(); }
-
-
-        //UI SECTION
         private void LstDrop_DragEnter(object sender, DragEventArgs e) { if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy; }
         private void LstDrop_DragDrop(object sender, DragEventArgs e)
         {
@@ -53,40 +55,47 @@ namespace Stitch2
             }
 
             // Change ui once stuff changes: Show RMD count
-            folder_icon.Visible = false;
-            lblCount.Text = RMD_FILES.Count.ToString();
-            lblCount.Visible = true;
-            CenterLabel(lblCount);
-            lblDrop.Text = Data.RMD_FILES_DROPPED;
+            ShowItemsDroppedUI();
         }
 
-        /// <summary>
-        /// Centers a label within its parent
-        /// </summary>
-        /// <param name="theLabel"></param>
-        private void CenterLabel(Label theLabel)
+        #region UI Functions
+                private void ShowItemsDroppedUI()
+                {
+                    folder_icon.Visible = false;
+                    lblCount.Visible = true;
+
+                    lblCount.Text = RMD_FILES.Count.ToString();
+                    lblDrop.Text = Data.RMD_FILES_DROPPED;
+
+                    CenterControl(lblCount);
+                }
+     
+                private void ShowItemsClearedUI()
+                {
+                    folder_icon.Visible = true;
+                    lblCount.Visible = false;
+
+                    lblDrop.Text = Data.DROP_HERE;
+
+                    RMD_FILES.Clear();
+                    KnownPaths.Clear();
+           
+                    CenterControl(lblCount);
+                }
+
+                private void CenterControl(Control theControl)
+                {
+                    int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
+                    theControl.Location = new Point(x2, theControl.Location.Y);
+                }
+        #endregion
+
+       
+        public void ClearList(object sender, EventArgs e)
         {
-            int x2 = (theLabel.Parent.Size.Width - theLabel.Size.Width) / 2;
-            theLabel.Location = new Point(x2, theLabel.Location.Y);
+            ShowItemsClearedUI();
         }
 
-        /// <summary>
-        /// Clears the rmd files list
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnClearList_Click(object sender, EventArgs e)
-        {
-            RMD_FILES.Clear();
-            KnownPaths.Clear();
-            lblDrop.Text = Data.DROP_HERE;
-            folder_icon.Visible = true;
-            lblCount.Visible = false;
-            CenterLabel(lblCount);
-        }
-
-
-        // TOOLS SECTION
 
         /// <summary>
         /// Checks folder for files with extension in extension list
@@ -171,7 +180,7 @@ namespace Stitch2
         public Dictionary<string, string> KNOWN = new Dictionary<string, string>();
         private bool ReplacePaths2(List<string> RMD)
         {
-            using (var form = new Replacer())
+            using (var form = new ReplaceDialog())
             {
                 form.RMDs = RMD;
                 var result = form.ShowDialog();
@@ -224,6 +233,7 @@ namespace Stitch2
 
             }
         }
+        
         /// <summary>
         /// Asks for location of file with name [filename] and adds the new location to knownpaths dictionary
         /// </summary>
@@ -258,8 +268,6 @@ namespace Stitch2
             }
         }
 
-        
-      
         /// <summary>
         /// The MAIN Stitching Part
         /// </summary>
@@ -267,92 +275,25 @@ namespace Stitch2
         /// <param name="e"></param>
         private void Stitch_button_Click(object sender, EventArgs e)
         {
-            List<RMD> main = null;
             if (RMD_FILES.Count == 0) { MessageBox.Show(Data.NO_RMD_FILES, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
-            else
-            {
+            else {
 
                 if (chkReplacePaths.Checked)
                 {
-                    if (ReplacePaths(RMD_FILES) == false)
-                    {
-                        return;
-                    };
-                    //if (ReplacePaths2(RMD_FILES) == false)
-                    //{
-                    //    return;
-                    //};
-
+                    if (ReplacePaths(RMD_FILES) == false) return;
                 }
 
-                // Save the paths of RMDs to text file 
-                String desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                String fileName = desktop_path + "\\" + DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss") + ".txt";
-                TextWriter tw = new StreamWriter(fileName);
-                foreach (String s in RMD_FILES) { tw.WriteLine(s.Replace("\\", @"/")); }
-                tw.Close();
+                PathList t = new PathList(RMD_FILES);
 
-                try
-                {
-                    // Run the stitcher ppwershell on the text file
-                    Process p = new Process();
-                    p.StartInfo.FileName = "powershell";
-                    p.StartInfo.Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + fileName;
-                    p.Start();
-                    p.WaitForExit();
-
-
-                    // Get the response from the resultant text file
-                    main = new List<RMD>();
-
-                    IEnumerable<string> lines = File.ReadLines(fileName + "-fail.txt");
-                    foreach (string line in lines) main.Add(new RMD(line));
-                    IEnumerable<string> lines2 = File.ReadLines(fileName + "-succeed.txt");
-                    foreach (string line in lines2) main.Add(new RMD(line).SetPass());
-
-                    // Delete the files produced
-                    try
-                    {
-                        if (File.Exists(fileName)) File.Delete(fileName);
-                        if (File.Exists(fileName + "-fail.txt")) File.Delete(fileName + "-fail.txt");
-                        if (File.Exists(fileName + "-succeed.txt")) File.Delete(fileName + "-succeed.txt");
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-
-                    BtnClearList_Click(null, null);
-
-                    //Send Data to the other form
-                    Report report = new Report();
-                    report.SetParentForm(this);
-                    report.SetRMDFiles(main);
-                    report.Show();
-
-                    Hide();
-
-                }
-                catch (Exception)
-                {
-                    if (File.Exists(fileName)) File.Delete(fileName);
-                    if (File.Exists(fileName + "-fail.txt")) File.Delete(fileName + "-fail.txt");
-                    if (File.Exists(fileName + "-succeed.txt")) File.Delete(fileName + "-succeed.txt");
-                    MessageBox.Show("An Error Occurred During the Stitching", "Ooops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                ProcessForm p = new ProcessForm(t, this, RMD_FILES);
+                p.ShowDialog();
             }
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void OnClose(object sender, FormClosingEventArgs e)
         {
-            Properties.Settings.Default.replace = this.chkReplacePaths.Checked;
+            Properties.Settings.Default.replace = chkReplacePaths.Checked;
             Properties.Settings.Default.Save();
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            Replacer r = new Replacer();
-            r.ShowDialog();
         }
     }
 }
