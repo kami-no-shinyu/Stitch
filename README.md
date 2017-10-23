@@ -14,4 +14,7 @@ assignments. Initially it was a task that took hours because
 4. Final report is shown displaying two lists: the ones that knitted successfully and the ones htat didn't 
 
 ## Screenshots
-![alt text](screenshots/0.png "Main Screen")
+![alt text](Screenshots/0.png "Main Screen")
+![alt text](Screenshots/1.png "On Item Drop")
+![alt text](Screenshots/2.png "During Knitting")
+![alt text](Screenshots/3.png "Report Screen")
