@@ -12,3 +12,6 @@ assignments. Initially it was a task that took hours because
 2. Stitch can help you replace source paths in all dropped files in just one go.
 3. Knitting is automatic, showing progress as it knits 
 4. Final report is shown displaying two lists: the ones that knitted successfully and the ones htat didn't 
+
+## Screenshots
+![alt text](screenshots/0.png "Main Screen")
