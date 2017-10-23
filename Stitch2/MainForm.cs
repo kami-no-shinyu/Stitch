@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Stitch
 {
     public partial class MainForm : Form
     {
-        List<string> RMD_FILES = new List<string>();
-        List<RMD> RMDS = new List<RMD>();
+        private List<string> RMD_FILES = new List<string>();
+        private List<RMD> RMDS = new List<RMD>();
 
         public MainForm() { InitializeComponent(); }
 
@@ -40,19 +38,17 @@ namespace Stitch
         private void LstDrop_DragEnter(object sender, DragEventArgs e) { if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy; }
         private void LstDrop_DragDrop(object sender, DragEventArgs e)
         {
-            string[] drag_content = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var dragContent = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            foreach (string draggged in drag_content)
+            foreach (var draggged in dragContent)
             {
-                foreach (string file in FileHandler.GetFiles(draggged, Data.RMD_EXTENSIONS))
+                foreach (var file in FileHandler.GetFiles(draggged, Data.RMD_EXTENSIONS))
                 {
-                    if (!RMD_FILES.Contains(file))
-                    {
-                        RMD_FILES.Add(file);
+                    if (RMD_FILES.Contains(file)) continue;
+                    RMD_FILES.Add(file);
 
-                        RMD temp_RMD = new RMD(file);
-                        RMDS.Add(temp_RMD);
-                    }
+                    var tempRmd = new RMD(file);
+                    RMDS.Add(tempRmd);
                 }
             }
 
@@ -69,62 +65,55 @@ namespace Stitch
 
         private string KeepAskingForSource(string source)
         {
-            string ext = Path.GetExtension(source);
-            openFile.FileName = source;
-            openFile.Filter = " " + ext + " file (*" + ext + ")|*" + ext;
-
-            if (openFile.ShowDialog() == DialogResult.OK)
+            while (true)
             {
-                if (openFile.SafeFileName.ToLower() == source.ToLower())
+                var ext = Path.GetExtension(source);
+                openFile.FileName = source;
+                openFile.Filter = $@" {ext} file (*{ext})|*{ext}";
+
+                if (openFile.ShowDialog() == DialogResult.OK)
                 {
-                    return openFile.FileName;
+                    if (openFile.SafeFileName?.ToLower() == source.ToLower())
+                    {
+                        return openFile.FileName;
+                    }
+                    var result =MessageBox.Show(Data.Warnings.SELECTED_WRONG_FILE + source + " ]", Data.Warnings.SELECTED_WRONG_FILE_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                    if (result == DialogResult.Cancel) return Data.EXIT_CODE;
                 }
                 else
                 {
-                    DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_WRONG_FILE + source + " ]", Data.Warnings.SELECTED_WRONG_FILE_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                    var result = MessageBox.Show(Data.Warnings.SELECTED_NOTHING, Data.Warnings.SELECTED_NOTHING_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
                     if (result == DialogResult.Cancel) return Data.EXIT_CODE;
-                    else return KeepAskingForSource(source);
                 }
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show(Data.Warnings.SELECTED_NOTHING, Data.Warnings.SELECTED_NOTHING_TITLE, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-                if (result == DialogResult.Cancel) return Data.EXIT_CODE;
-                else return KeepAskingForSource(source);
             }
         }
 
-        private bool ReplacePaths(List<RMD> rmds)
+        private bool ReplacePaths(IEnumerable<RMD> rmds)
         {
-            Dictionary<string, string> KnownSources = new Dictionary<string, string>();
+            var knownSources = new Dictionary<string, string>();
 
-            foreach (RMD rmd in rmds)
+            foreach (var rmd in rmds)
             {
-                foreach (string source in rmd.GetSources().Keys)
+                foreach (var source in rmd.GetSources().Keys)
                 {
-                    string source_lower = source.ToLower();
-                    if (KnownSources.ContainsKey(source_lower))
+                    var sourceLower = source.ToLower();
+                    if (knownSources.ContainsKey(sourceLower))
                     {
-                        rmd.SetSource(source, KnownSources[source_lower]);
+                        rmd.SetSource(source, knownSources[sourceLower]);
                         return true;
                     }
-                    else
+
+                    var newSource = KeepAskingForSource(source).Replace(@"\", @"/");
+                    if (newSource == Data.EXIT_CODE)
                     {
-                        string new_source = KeepAskingForSource(source).Replace(@"\", @"/");
-                        if (new_source == Data.EXIT_CODE)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            KnownSources[source_lower] = new_source;
-                            rmd.SetSource(source, new_source);
-                            return true;
-                        }
+                        return false;
                     }
+
+                    knownSources[sourceLower] = newSource;
+                    rmd.SetSource(source, newSource);
+                    return true;
                 }
             }
-
             return true;
         }
 
@@ -132,7 +121,7 @@ namespace Stitch
         {
             if (RMDS.Count == 0)
             {
-                MessageBox.Show(Data.NO_RMD_FILES, "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Data.NO_RMD_FILES, Data.MSG_INFO, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -141,9 +130,9 @@ namespace Stitch
                     if (ReplacePaths(RMDS) == false) return;
                 }
 
-                PathList t = new PathList(RMD_FILES);
+                var t = new PathList(RMD_FILES);
 
-                ProcessForm p = new ProcessForm(t, this, RMD_FILES);
+                var p = new ProcessForm(t, this, RMD_FILES);
                 p.ShowDialog();
             }
         }
@@ -176,9 +165,9 @@ namespace Stitch
             CenterControl(lblCount);
         }
 
-        private void CenterControl(Control theControl)
+        private static void CenterControl(Control theControl)
         {
-            int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
+            var x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
             theControl.Location = new Point(x2, theControl.Location.Y);
         }
         #endregion

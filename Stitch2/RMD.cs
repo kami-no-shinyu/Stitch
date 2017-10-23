@@ -2,84 +2,78 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Stitch
 {
     public class RMD
     {
-        public string author;
-        public string filename;
-        public string file;
-        public string directory;
-        public string result_prefix;
-        public Dictionary<string,string> sources = new Dictionary<string, string>();
-
-        public Boolean passed = false;
+        public string Author;
+        public readonly string _file;
+        public string _resultPrefix;
+        private readonly Dictionary<string,string> _sources = new Dictionary<string, string>();
+        public bool _passed;
 
         public RMD(string file)
         {
-            this.file = file;
-            this.filename = Path.GetFileNameWithoutExtension(file);
+            
+            _file = file;
+            var filename = Path.GetFileNameWithoutExtension(file);
 
-            foreach (String line in File.ReadLines(file))
+            foreach (var line in File.ReadLines(file))
             {
                 if (line.Contains("author"))
                 {
-                    string[] pieces = line.Split(':');
-                    author = pieces[1].Replace("\"","").Replace("\'","");
+                    var pieces = line.Split(':');
+                    Author = pieces[1].Replace("\"","").Replace("\'","");
                 }
 
                 if (line.Contains("load") || line.Contains("read.delim"))
                 {
-                    int start = line.IndexOf('"'); // Find first quote
-                    int end = line.IndexOf('"', start + 1); // Find the next quote
-                    string source_line = line.Substring(start, end - start + 1).Replace('"', ' ').Trim();
+                    var start = line.IndexOf('"'); // Find first quote
+                    var end = line.IndexOf('"', start + 1); // Find the next quote
+                    var sourceLine = line.Substring(start, end - start + 1).Replace('"', ' ').Trim();
 
-                    string rmd_name = "";
-                    if (source_line.Contains("/")) //If person referenced a path instead of just the filename
+                    string rmdName;
+                    if (sourceLine.Contains("/")) //If person referenced a path instead of just the filename
                     {
-                        rmd_name = source_line.Split('/').Last().Replace('"', ' ').Trim();
+                        rmdName = sourceLine.Split('/').Last().Replace('"', ' ').Trim();
                     }
-                    else if (source_line.Contains(@"\"))
+                    else if (sourceLine.Contains(@"\"))
                     {
-                        string source_new = source_line.Replace(@"\", @"/");
-                        rmd_name = source_new.Split('/').Last().Replace('"', ' ').Trim();
+                        var sourceNew = sourceLine.Replace(@"\", @"/");
+                        rmdName = sourceNew.Split('/').Last().Replace('"', ' ').Trim();
                     }
                     else
                     {
-                        rmd_name = source_line.Replace('"', ' ').Trim();
+                        rmdName = sourceLine.Replace('"', ' ').Trim();
                     }
 
-                    sources[rmd_name.ToLower()] = source_line;
+                    _sources[rmdName.ToLower()] = sourceLine;
                 }
             }
 
-            directory = Path.GetDirectoryName(file);
-            result_prefix = directory + @"\" + filename;
+            var directory = Path.GetDirectoryName(file);
+            _resultPrefix = directory + @"\" + filename;
         }
 
         public RMD SetPass()
         {
-            passed = true;
+            _passed = true;
             return this;
         }
 
-        public void SetSource(string name,string new_source)
+        public void SetSource(string name,string newSource)
         {
-            if (sources.Keys.Contains(name))
-            {
-                string old_source = sources[name];
-                string old_string = File.ReadAllText(file);
-                string new_string = old_string.Replace(old_source, new_source);
-                File.WriteAllText(file, new_string);
-            }
+            if (!_sources.Keys.Contains(name)) return;
+            var oldSource = _sources[name];
+            var oldString = File.ReadAllText(_file);
+            var newString = oldString.Replace(oldSource, newSource);
+            File.WriteAllText(_file, newString);
         }
 
         public Dictionary<string,string> GetSources()
         {
-            return sources;
+            return _sources;
         }
 
     }

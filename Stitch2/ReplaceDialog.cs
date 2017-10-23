@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Stitch
@@ -14,8 +10,8 @@ namespace Stitch
     public partial class ReplaceDialog : Form
     {
         public Dictionary<string, string> KnownPaths = new Dictionary<string, string>();
-        public List<string> unknown = new List<string>();
-        public List<string> RMDs { get; set; }
+        public List<string> Unknown = new List<string>();
+        public List<string> RmDs { get; set; }
 
         public ReplaceDialog()
         {
@@ -24,19 +20,19 @@ namespace Stitch
 
         public void Init()
         {
-            Dictionary<string, string> NewKnownPaths = new Dictionary<string, string>();
+            var newKnownPaths = new Dictionary<string, string>();
 
-            foreach(string rmd in RMDs)
+            foreach(var rmd in RmDs)
             {
-                string str = File.ReadAllText(rmd);
-                foreach (string line in File.ReadLines(rmd))
+                var str = File.ReadAllText(rmd);
+                foreach (var line in File.ReadLines(rmd))
                 {
                     if (line.Contains("load") || line.Contains("read.delim"))
                     {
-                        int start = line.IndexOf('"');
-                        int end = line.IndexOf('"', start + 1);
-                        string old_path = line.Substring(start, end - start + 1).Replace('"', ' ').Trim();
-                        string rmd_name = "";
+                        var start = line.IndexOf('"');
+                        var end = line.IndexOf('"', start + 1);
+                        var old_path = line.Substring(start, end - start + 1).Replace('"', ' ').Trim();
+                        var rmd_name = "";
 
                         if (old_path.Contains("/")) //If person referenced a path instead of just the filename
                         {
@@ -47,9 +43,9 @@ namespace Stitch
                             rmd_name = old_path.Replace('"', ' ').Trim();
                         }
 
-                        if (!unknown.Contains(rmd_name))
+                        if (!Unknown.Contains(rmd_name))
                         {
-                            unknown.Add(rmd_name);
+                            Unknown.Add(rmd_name);
                         }
                     }
                 }
@@ -59,29 +55,29 @@ namespace Stitch
 
         private void CreateUIForUnknowns()
         {
-            int count = 0;
-            foreach(string source in unknown)
+            var count = 0;
+            foreach(var source in Unknown)
             {
                 count++;
-                Label counter = new Label
+                var counter = new Label
                 {
                     Text = count.ToString(),
                     Font = new Font("Segoe UI", 10f,FontStyle.Bold),
                     Width = 30
                 };
 
-                Label sourceName = new Label
+                var sourceName = new Label
                 {
                     Text = source,
                     Font = new Font("Segoe UI",8f,FontStyle.Bold)
                 };
 
-                Button replacer = new Button
+                var replacer = new Button
                 {
-                    Text = "Select"
+                    Text = @"Select"
                 };
 
-                TextBox sourceReplacement = new TextBox()
+                var sourceReplacement = new TextBox
                 {
                     Width = 150,
                     ForeColor = Color.Gray,
@@ -89,25 +85,23 @@ namespace Stitch
                     Text = source
                 };
 
-                sourceReplacement.GotFocus += new EventHandler(delegate (object sender, EventArgs a)
+                sourceReplacement.GotFocus += delegate
                 {
                     sourceReplacement.Text = "";
                     sourceReplacement.ForeColor = Color.Black;
-                });
+                };
                 
 
-                OpenFileDialog opener = new OpenFileDialog();
+                var opener = new OpenFileDialog();
 
-                replacer.Click += new EventHandler(delegate (Object o, EventArgs a)
+                replacer.Click += delegate
                 {
-                    if(opener.ShowDialog() == DialogResult.OK)
-                    {
-                        sourceReplacement.Text = opener.SafeFileName;
-                        KnownPaths[source] = opener.FileName;
-                    }
-                });
+                    if (opener.ShowDialog() != DialogResult.OK) return;
+                    sourceReplacement.Text = opener.SafeFileName;
+                    KnownPaths[source] = opener.FileName;
+                };
 
-                FlowLayoutPanel p = new FlowLayoutPanel();
+                var p = new FlowLayoutPanel();
                 p.Controls.Add(counter);
                 p.Controls.Add(sourceName);
                 p.Controls.Add(sourceReplacement);
@@ -138,12 +132,12 @@ namespace Stitch
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

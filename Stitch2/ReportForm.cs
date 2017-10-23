@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Stitch
 {
     public partial class ReportForm : Form
     {
-        private Form parent;
+        private Form _parent;
         private Form nextForm;
         public ReportForm(Form nextForm){
             this.nextForm = nextForm;
@@ -21,36 +14,36 @@ namespace Stitch
         }
 
         // Dictionary containing the raw name of book to its path
-        public Dictionary<String, RMD> book = new Dictionary<string, RMD>();
+        public Dictionary<string, RMD> Book = new Dictionary<string, RMD>();
 
-        public void SetRMDFiles(List<RMD> passed_rmds)
+        public void StageRmdFiles(List<RMD> rmds)
         {
-            int fail_count = 0;
-            int success_count = 0;
+            var failCount = 0;
+            var successCount = 0;
 
-            foreach(RMD rmd in passed_rmds)
+            foreach(var rmd in rmds)
             {
-                if (book.ContainsKey(rmd.author))
+                if (Book.ContainsKey(rmd.Author))
                 {
-                    book[rmd.author] = rmd;
+                    Book[rmd.Author] = rmd;
                 } else
                 {
-                    book.Add(rmd.author, rmd);
+                    Book.Add(rmd.Author, rmd);
                 }
 
-                if (rmd.passed)
+                if (rmd._passed)
                 {
-                    success_count++;
-                    lstSuccess2.Items.Add(rmd.author);
+                    successCount++;
+                    lstSuccess2.Items.Add(rmd.Author);
                 } else
                 {
-                    fail_count++;
-                    lstFailed2.Items.Add(rmd.author);
+                    failCount++;
+                    lstFailed2.Items.Add(rmd.Author);
                 }
             }
 
-            lblfail.Text = "Failed (" + fail_count.ToString() + ")";
-            lblsuccess.Text = "Success (" + success_count.ToString() + ")";
+            lblfail.Text = $@"Failed ({failCount})";
+            lblsuccess.Text = $@"Success ({successCount})";
         }
 
         
@@ -62,7 +55,7 @@ namespace Stitch
 
         public void SetParentForm(Form parent)
         {
-            this.parent = parent;
+            _parent = parent;
         }
         private void Report_Load(object sender, EventArgs e)
         {
@@ -71,37 +64,35 @@ namespace Stitch
 
         private void LstSucceed_DoubleClick(object sender, MouseEventArgs e)
         {
-            if (lstSuccess2.SelectedItems.Count > 0)
+            if (lstSuccess2.SelectedItems.Count <= 0) return;
+            var fileAnkasa = Book[lstSuccess2.SelectedItem.ToString()]._resultPrefix;
+            try
             {
-                String file_ankasa = book[lstSuccess2.SelectedItem.ToString()].result_prefix;
-                try
-                {
-                    System.Diagnostics.Process.Start(file_ankasa + ".docx");
-                }
-                catch (Exception)
-                {
-
-                }
-
-                //Make the label blue
-                lstSuccess2.SetItemChecked(lstSuccess2.SelectedIndex, true);
+                System.Diagnostics.Process.Start(fileAnkasa + ".docx");
             }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            //Make the label blue
+            lstSuccess2.SetItemChecked(lstSuccess2.SelectedIndex, true);
         }
 
         private void LstFailed_DoubleClick(object sender, EventArgs e)
         {
-            if (lstFailed2.SelectedItems.Count != 0)
+            if (lstFailed2.SelectedItems.Count == 0) return;
+            var fileAnkasa = Book[lstFailed2.SelectedItem.ToString()]._file;
+            try
             {
-                String file_ankasa = book[lstFailed2.SelectedItem.ToString()].file;
-                try
-                {
-                    System.Diagnostics.Process.Start(file_ankasa);
-                }
-                catch (Exception) { }
-
-                lstFailed2.SetItemChecked(lstFailed2.SelectedIndex, true);
-
+                System.Diagnostics.Process.Start(fileAnkasa);
             }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            lstFailed2.SetItemChecked(lstFailed2.SelectedIndex, true);
         }
     }
 }

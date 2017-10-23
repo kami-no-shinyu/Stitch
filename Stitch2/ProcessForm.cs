@@ -10,14 +10,14 @@ namespace Stitch
     {
         public MainForm parent;
 
-        public PathList pathList;
-        public List<string> rmds;
+        public PathList PathList;
+        public List<string> Rmds;
 
-        public ProcessForm(PathList path_list,MainForm parent,List<string> rmds)
+        public ProcessForm(PathList pathList,MainForm parent,List<string> rmds)
         {
-            this.pathList = path_list;
+            PathList = pathList;
             this.parent = parent;
-            this.rmds = rmds;
+            Rmds = rmds;
             InitializeComponent();
         }
 
@@ -37,18 +37,23 @@ namespace Stitch
             float count = 0;
             try
             {
-                Process p = new Process();
-                p.StartInfo.FileName = @"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe";
-                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + pathList.path_of_file;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.ErrorDialog = false;
-                p.StartInfo.CreateNoWindow = true;
-                p.EnableRaisingEvents = true;
+                var p = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = @"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe",
+                        Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + PathList.PathOfFile,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        ErrorDialog = false,
+                        CreateNoWindow = true
+                    },
+                    EnableRaisingEvents = true
+                };
                 p.Start();
 
-                p.ErrorDataReceived += (sendingProcess, errorLine) => this.Invoke((Action)delegate
+                p.ErrorDataReceived += (sendingProcess, errorLine) => Invoke((Action)delegate
                 {
                     if(errorLine.Data != null)
                     {
@@ -59,11 +64,11 @@ namespace Stitch
                             count++;
 
                             label1.Text = errorLine.Data.Split(':')[1];
-                            lblCount.Text = count.ToString() + "/" + rmds.Count;
+                            lblCount.Text = $@"{count}/{Rmds.Count}";
                             CenterControl(label1);
                             CenterControl(lblCount);
 
-                            prog.Value = (int)((count / rmds.Count) * 100);
+                            prog.Value = (int)((count / Rmds.Count) * 100);
                         }
                     }
                 });
@@ -81,38 +86,28 @@ namespace Stitch
             }
         }
 
-        List<RMD> main = null;
+        List<RMD> _main;
         private void StitchingEnded(object sender, EventArgs e)
         {
-            main = new List<RMD>();
+            _main = new List<RMD>();
 
-            foreach(string path in pathList.GetFailTaskList().GetPaths())
+            foreach(string path in PathList.GetFailTaskList().GetPaths())
             {
-                main.Add(new RMD(path));
+                _main.Add(new RMD(path));
             }
-            foreach(string path in pathList.GetSuccessTaskList().GetPaths())
+            foreach(string path in PathList.GetSuccessTaskList().GetPaths())
             {
-                main.Add(new RMD(path).SetPass());
+                _main.Add(new RMD(path).SetPass());
             }
             
             // Delete the files produced
-            try
-            {
-                pathList.Dispose();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            PathList.Dispose();
 
-            Invoke((Action)(() =>
-            {
-                ShowReport(main);
-            }));
+            Invoke((Action)(ShowReport));
 
         }
 
-        private void ShowReport(List<RMD> main)
+        private void ShowReport()
         {
             parent.ClearList(null, null);
             DialogResult = DialogResult.OK;
@@ -121,15 +116,15 @@ namespace Stitch
 
         private void Pending_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ReportForm report = new ReportForm(parent);
+            var report = new ReportForm(parent);
             report.SetParentForm(this);
-            report.SetRMDFiles(main);
+            report.StageRmdFiles(_main);
             report.Show();
         }
 
-        private void CenterControl(Control theControl)
+        private static void CenterControl(Control theControl)
         {
-            int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
+            var x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
             theControl.Location = new Point(x2, theControl.Location.Y);
         }
     }

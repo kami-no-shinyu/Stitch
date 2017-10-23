@@ -10,45 +10,43 @@ namespace Stitch
 
     public class PathList
     {
-        public string path_of_file;
+        public string PathOfFile;
 
-        public List<string> list_of_paths = null;
+        public List<string> ListOfPaths = null;
 
-        private PathList failed_tasks = null;
-        private PathList succeed_tasks = null;
+        private PathList _failedTasks = null;
+        private PathList _succeedTasks = null;
         
         public List<string> GetPaths()
         {
-            return this.list_of_paths;
+            return ListOfPaths;
         }
 
         // Creates a tasklist from a file - the fail and succeed tasklists created
-        public PathList(string path_of_file)
+        public PathList(string pathOfFile)
         {
-            this.path_of_file = path_of_file;
-            if (File.Exists(path_of_file))
+            PathOfFile = pathOfFile;
+            if (!File.Exists(pathOfFile)) return;
+            ListOfPaths = new List<string>();
+            foreach (var line in File.ReadLines(pathOfFile))
             {
-                list_of_paths = new List<string>();
-                foreach (string line in File.ReadLines(path_of_file))
-                {
-                    list_of_paths.Add(line);
-                }
+                ListOfPaths.Add(line);
             }
         }
 
         // Creates a tasklist to a file
-        public PathList(List<string> list_of_paths)
+        public PathList(List<string> listOfPaths)
         {
-            this.list_of_paths = list_of_paths;
+            ListOfPaths = listOfPaths;
 
-            string name_of_file = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
-            string destination_of_file = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var nameOfFile = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss");
+            var destinationOfFile = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         
-            path_of_file = Path.Combine(destination_of_file, name_of_file);
+            PathOfFile = Path.Combine(destinationOfFile, nameOfFile);
 
-            using(TextWriter tw = new StreamWriter(path_of_file))
+            using(TextWriter tw = new StreamWriter(PathOfFile))
             {
-                foreach(string path in list_of_paths)
+                foreach(var path in listOfPaths)
                 {
                     tw.WriteLine(path.Replace("\\",@"/"));
                 }
@@ -57,32 +55,32 @@ namespace Stitch
 
         public PathList GetFailTaskList()
         {
-            if(failed_tasks == null)
+            if(_failedTasks == null)
             {
-                failed_tasks = new PathList(path_of_file + "-fail");
+                _failedTasks = new PathList(PathOfFile + "-fail");
             }
-            return failed_tasks;
+            return _failedTasks;
         }
 
         public PathList GetSuccessTaskList()
         {
-            if(succeed_tasks == null)
+            if(_succeedTasks == null)
             {
-                succeed_tasks = new PathList(path_of_file + "-succeed");
+                _succeedTasks = new PathList(PathOfFile + "-succeed");
             }
-            return succeed_tasks;
+            return _succeedTasks;
         }
 
         // Deletes the tasklist file if it has been created
         public void Dispose()
         {
-            if (File.Exists(path_of_file))
+            if (File.Exists(PathOfFile))
             {
                 try
                 {
-                    File.Delete(path_of_file);
-                    File.Delete(failed_tasks.path_of_file);
-                    File.Delete(succeed_tasks.path_of_file);
+                    File.Delete(PathOfFile);
+                    File.Delete(_failedTasks.PathOfFile);
+                    File.Delete(_succeedTasks.PathOfFile);
                 }
                 catch (Exception e)
                 {

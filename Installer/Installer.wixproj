@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>7d67f4d2-c92b-44d8-826e-9d68eff45c28</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Stitch</OutputName>
+    <OutputName>Installer</OutputName>
     <OutputType>Package</OutputType>
     <Name>Installer</Name>
   </PropertyGroup>

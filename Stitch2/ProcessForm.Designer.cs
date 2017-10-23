@@ -79,7 +79,7 @@
             this.label2.Text = "RMDs Processed";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // Pending
+            // ProcessForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -93,10 +93,11 @@
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Name = "Pending";
+            this.Name = "ProcessForm";
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Knitting";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Pending_FormClosing);
             this.Load += new System.EventHandler(this.Pending_Load);
             this.ResumeLayout(false);

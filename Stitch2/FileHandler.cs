@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static System.IO.File;
 
 namespace Stitch
 {
     public static class FileHandler
     {
-        public static List<string> GetFiles(String dir,List<string> extensions)
+        public static List<string> GetFiles(string dir,List<string> extensions)
         {
-            List<String> results = new List<string>();
-            if (File.GetAttributes(dir).HasFlag(FileAttributes.Directory))
+            var results = new List<string>();
+            if (GetAttributes(dir).HasFlag(FileAttributes.Directory))
             {
-                List<string> rmd_files = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
+                var rmdFiles = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories)
                     .Where(file => extensions
                     .Contains(Path.GetExtension(file)))
                     .ToList();
-                results.AddRange(rmd_files);
+                results.AddRange(rmdFiles);
             }
             else // if its a file
             {

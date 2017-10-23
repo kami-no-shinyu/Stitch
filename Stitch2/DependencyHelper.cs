@@ -1,55 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Stitch
 {
-    class DependencyHelper
+    internal class DependencyHelper
     {
         //Checks if [pathsToCheck] are in the Environment path. If not ask [Patho] to help user set them
         public static void CheckDependencies(string[] pathsToCheck)
         {
-            bool oneIsNotSet = false;
-            string combinedPathsForPatho = "";
+            var oneIsNotSet = false;
+            var combinedPathsForPatho = "";
 
-            foreach(string path in pathsToCheck)
+            foreach(var path in pathsToCheck)
             {
-                if (!ExistsOnPath(path.Split('*')[0]))
-                {
-                    oneIsNotSet = true;
-                    combinedPathsForPatho += " " + path;
-                }
+                if (ExistsOnPath(path.Split('*')[0])) continue;
+                oneIsNotSet = true;
+                combinedPathsForPatho += " " + path;
             }
 
-            if (oneIsNotSet)
+            if (!oneIsNotSet) return;
+            var p = new Process
             {
-                Process p = new Process()
+                StartInfo = new ProcessStartInfo
                 {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = Data.DependencyWorker,
-                        Arguments = combinedPathsForPatho,
+                    FileName = Data.DependencyWorker,
+                    Arguments = combinedPathsForPatho,
 
-                    }
-                };
-                try
-                {
-                    p.Start();
-                    p.WaitForExit();
                 }
-                catch (Exception){ }
+            };
+            try
+            {
+                p.Start();
+                p.WaitForExit();
             }
+            catch (Exception){ }
         }
         
         //Deprecated!: Checks if [pathsToCheck] are in the Environment path. Returns True or False
         public static bool DependenciesSet(string[] pathsToCheck)
         {
-            bool result = true;
-            foreach (string path in pathsToCheck)
+            var result = true;
+            foreach (var path in pathsToCheck)
             {
                 if (!ExistsOnPath(path.Split('*')[0])) result = false;
             }
