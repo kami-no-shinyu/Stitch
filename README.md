@@ -1,11 +1,11 @@
 # Stitch
-A C# .NET application to automatically knit RMarkdown files and show info on the results
+A C# .NET application to automatically knit RMarkdown files and show which passed & failed.
 
 ## Intro
 I built this app to help my statistics lecturer and assistant teachers to quickly assess submitted 
-assignments. Initially it was a task that took hours because 
-1. They needed to replace all the paths to the source files in the assignment with their own source paths. 
-2. They needed to quickly tell those which knitted from those which didn't to quickly asssess things. 
+assignments. Initially it was a task that took hours because:
+1. They needed to replace all source file paths in the submitted rmds(R-Markdown files) with their own source paths. 
+2. They needed to quickly tell the rmds which knitted from those which didn't to quickly asssess things. 
 
 ## Usage
 1. Drag and drop folder or files to the dragdrop area. Stitch will automatically pick out the RMarkdown files
