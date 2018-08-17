@@ -8,15 +8,16 @@ namespace Stitch
 {
     public partial class ProcessForm : Form
     {
-        public PathList path_list;
         public MainForm parent;
-        public List<string> rmds;
 
-        public ProcessForm(PathList path_list,MainForm parent,List<string> rmds)
+        public PathList PathList;
+        public List<string> Rmds;
+
+        public ProcessForm(PathList pathList,MainForm parent,List<string> rmds)
         {
-            this.path_list = path_list;
+            PathList = pathList;
             this.parent = parent;
-            this.rmds = rmds;
+            Rmds = rmds;
             InitializeComponent();
         }
 
@@ -25,48 +26,34 @@ namespace Stitch
             parent.Hide();
             Size = parent.Size;
             Location = parent.Location;
-            CenterControl(prog);
-            CenterControl(label1);
-            CenterControl(lblCount);
-            CenterControl(label2);
-            Init();  
+            
+            foreach(Control c in Controls){ CenterControl(c);}
+            
+            StartStitching();  
         }
 
-        public float count = 0;
-        public void Init()
+        public void StartStitching()
         {
+            float count = 0;
             try
             {
-                // Run the stitcher ppwershell on the text file
-                Process p = new Process();
-                p.StartInfo.FileName = @"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe";
-                p.StartInfo.Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + path_list.path_of_file;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.ErrorDialog = false;
-                p.StartInfo.CreateNoWindow = true;
-                p.EnableRaisingEvents = true;
+                var p = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = @"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe",
+                        Arguments = " -executionpolicy remotesigned -File  stitcher.ps1 -f " + PathList.PathOfFile,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        ErrorDialog = false,
+                        CreateNoWindow = true
+                    },
+                    EnableRaisingEvents = true
+                };
                 p.Start();
 
-                p.OutputDataReceived += (sendingProcess, outLine) => this.Invoke((Action)delegate
-                {
-                    if (outLine.Data != null)
-                    {
-                        lblCount.Visible = true;
-                        label1.Text = outLine.Data;
-                        if (outLine.Data.Contains("processing file"))
-                        {
-                            count++;
-                            lblCount.Text = count.ToString() + "/" + rmds.Count;
-                            this.CenterControl(lblCount);
-
-                            //MessageBox.Show("Count: " + count.ToString() + "RMD Count: " + rmds.Count.ToString() + "Percentage: " + ((count / rmds.Count)).ToString() + " " + outLine.Data);
-                            prog.Value = (int)((count / rmds.Count) * 100);
-                        }
-                    }
-                });
-                p.ErrorDataReceived += (sendingProcess, errorLine) => this.Invoke((Action)delegate
+                p.ErrorDataReceived += (sendingProcess, errorLine) => Invoke((Action)delegate
                 {
                     if(errorLine.Data != null)
                     {
@@ -74,85 +61,70 @@ namespace Stitch
 
                         if (errorLine.Data.Contains("processing file"))
                         {
-                            label1.Text = errorLine.Data.Split(':')[1];
-                            CenterControl(label1);
                             count++;
-                            lblCount.Text = count.ToString() + "/" + rmds.Count;
-                            this.CenterControl(lblCount);
 
-                            //MessageBox.Show("Count: " + count.ToString() + "RMD Count: " + rmds.Count.ToString() + "Percentage: " + ((count / rmds.Count)).ToString() + " " + errorLine.Data);
-                            prog.Value = (int)((count / rmds.Count) * 100);
+                            label1.Text = errorLine.Data.Split(':')[1];
+                            lblCount.Text = $@"{count}/{Rmds.Count}";
+                            CenterControl(label1);
+                            CenterControl(lblCount);
+
+                            prog.Value = (int)((count / Rmds.Count) * 100);
                         }
                     }
-                   
                 });
 
                 p.BeginOutputReadLine();
                 p.BeginErrorReadLine();
-
-                p.Exited += P_Exited;
-
-
+                p.Exited += StitchingEnded;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.StackTrace);
-                MessageBox.Show("An Error Occurred During the Stitching", "Ooops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Data.ERROR_DURING_STITCHING, "Ooops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Hide();
+                parent.Show();
             }
         }
-        List<RMD> main = null;
 
-        private void P_Exited(object sender, EventArgs e)
+        List<RMD> _main;
+        private void StitchingEnded(object sender, EventArgs e)
         {
+            _main = new List<RMD>();
 
-            // Get the response from the resultant text file
-            main = new List<RMD>();
-
-            foreach(string path in path_list.GetFailTaskList().GetPaths())
+            foreach(string path in PathList.GetFailTaskList().GetPaths())
             {
-                main.Add(new RMD(path));
+                _main.Add(new RMD(path));
             }
-            foreach(string path in path_list.GetSuccessTaskList().GetPaths())
+            foreach(string path in PathList.GetSuccessTaskList().GetPaths())
             {
-                main.Add(new RMD(path).SetPass());
+                _main.Add(new RMD(path).SetPass());
             }
             
             // Delete the files produced
-            try
-            {
-                path_list.Dispose();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            PathList.Dispose();
 
-            Invoke((Action)(() =>
-            {
-                ShowReport(main);
-            }));
+            Invoke((Action)(ShowReport));
 
         }
 
-        private void ShowReport(List<RMD> main)
+        private void ShowReport()
         {
             parent.ClearList(null, null);
-            //Send Data to the other form
             DialogResult = DialogResult.OK;
             Close();            
         }
 
         private void Pending_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ReportForm report = new ReportForm(parent);
+            var report = new ReportForm(parent);
             report.SetParentForm(this);
-            report.SetRMDFiles(main);
+            report.StageRmdFiles(_main);
             report.Show();
         }
 
-        private void CenterControl(Control theControl)
+        private static void CenterControl(Control theControl)
         {
-            int x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
+            var x2 = (theControl.Parent.Size.Width - theControl.Size.Width) / 2;
             theControl.Location = new Point(x2, theControl.Location.Y);
         }
     }

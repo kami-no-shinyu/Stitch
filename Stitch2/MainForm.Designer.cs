@@ -77,7 +77,7 @@
             this.stitch_button.TabIndex = 2;
             this.stitch_button.Text = "Stitch";
             this.stitch_button.UseVisualStyleBackColor = false;
-            this.stitch_button.Click += new System.EventHandler(this.Stitch_button_Click);
+            this.stitch_button.Click += new System.EventHandler(this.Stitch);
             // 
             // logoBox
             // 
@@ -254,7 +254,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Stitch";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClose);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LstDrop_DragEnter);
             ((System.ComponentModel.ISupportInitialize)(this.logoBox)).EndInit();
