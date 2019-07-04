@@ -1,7 +1,6 @@
 # Stitch
 A C# .NET application to automatically knit RMarkdown files and show which passed & failed.
 
-## Intro
 I built this app to help my statistics lecturer and assistant teachers to quickly assess submitted 
 assignments. Initially it was a task that took hours because:
 1. They needed to replace all source file paths in the submitted rmds(R-Markdown files) with their own source paths. 
