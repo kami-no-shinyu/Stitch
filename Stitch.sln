@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stitch", "Stitch2\Stitch.csproj", "{2FC1A1E8-33EE-4728-9BC7-79CAC3766979}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stitch", "Stitch\Stitch.csproj", "{2FC1A1E8-33EE-4728-9BC7-79CAC3766979}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Patho", "Path\Patho\Patho.csproj", "{06707FDD-C4A2-4332-9166-F8B6B61ABF96}"
 EndProject
